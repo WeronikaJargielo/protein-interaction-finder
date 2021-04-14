@@ -6,7 +6,6 @@ import org.biojava.nbio.structure.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,12 +21,12 @@ final class PdbStructureParser {
         return StructureIO.getStructure(pdbFilename);
     }
 
-    LinkedList<Atom> getAtoms(String[] atomNames) {
-        return new LinkedList<>(Arrays.asList(StructureTools.getAtomArray(proteinStructure, atomNames)));
+    ArrayList<Atom> getAtoms(String[] atomNames) {
+        return new ArrayList<>(Arrays.asList(StructureTools.getAtomArray(proteinStructure, atomNames)));
     }
 
-    LinkedList<Atom> getAtoms(String[] atomNames, List<AminoAcidAbbreviations> allowedAminoAcids) {
-        LinkedList<Atom> atoms = new LinkedList<>(Arrays.asList(StructureTools.getAtomArray(proteinStructure, atomNames)));
+    ArrayList<Atom> getAtoms(String[] atomNames, List<AminoAcidAbbreviations> allowedAminoAcids) {
+        ArrayList<Atom> atoms = new ArrayList<>(Arrays.asList(StructureTools.getAtomArray(proteinStructure, atomNames)));
 
         atoms.removeIf((a) -> {
             final String aminoAcidName = a.getGroup().getPDBName();
@@ -38,7 +37,7 @@ final class PdbStructureParser {
         return atoms;
     }
 
-    List<AromaticRing> getAromaticRings() {
+    ArrayList<AromaticRing> getAromaticRings() {
 
         List<Atom> phenylalanineAtoms = getAtoms(new String[]{"CG", "CD1", "CD2", "CE1", "CE2", "CZ"}, Arrays.asList(AminoAcidAbbreviations.PHE));
         List<Atom> tyrosineAtoms = getAtoms(new String[]{"CG", "CD1", "CD2", "CE1", "CE2", "CZ"}, Arrays.asList(AminoAcidAbbreviations.TYR));
@@ -54,7 +53,7 @@ final class PdbStructureParser {
         List<List<Atom>> tryBenzene = Lists.partition(tryptophanBenzeneRingAtoms, 6);
 
 
-        List<AromaticRing> aromaticRings = new ArrayList<>();
+        ArrayList <AromaticRing> aromaticRings = new ArrayList<>();
 
         for (List<Atom> aromaticRingAtoms : phe_tyr) {
             aromaticRings.add(new AromaticRing(aromaticRingAtoms));

@@ -14,6 +14,18 @@ public class HydrophobicInteraction {
         this.distance = distance;
     }
 
+    public AminoAcid getFirstInteractee() {
+        return firstInteractee;
+    }
+
+    public AminoAcid getSecondInteractee() {
+        return secondInteractee;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

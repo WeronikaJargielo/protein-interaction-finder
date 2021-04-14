@@ -13,8 +13,8 @@ public class Main {
             System.out.println("\nDisulphide bridges found:\nPosition Residue Chain Position Residue Chain distCA distCB distSS phiSS phi11 phi21");
             for (Object bridge : searcher.findDisulphideBridges()) { System.out.println(bridge); }
 
-
-//            for (Object interaction : searcher.findSulphurAromaticInteractions()) { System.out.println(interaction); }
+            System.out.println("\nSulphur-Aromatic interactions found:\nPosition Residue Chain Position Residue Chain dist phi1");
+            for (Object interaction : searcher.findSulphurAromaticInteractions()) { System.out.println(interaction); }
 
         } catch (Exception e) {
             e.printStackTrace();

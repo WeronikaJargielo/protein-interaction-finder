@@ -26,7 +26,7 @@ public class HydrophobicInteractionsFinder {
     }
 
     List<HydrophobicInteraction> findHydrophobicInteractions() {
-        LinkedList<Atom> cbAtoms = pdbStructureParser.getAtoms(desiredAtoms, allowedAminoAcids);
+        ArrayList<Atom> cbAtoms =  pdbStructureParser.getAtoms(desiredAtoms, allowedAminoAcids);
 
         ArrayList<HydrophobicInteraction> foundInteractions = new ArrayList<>();
 
