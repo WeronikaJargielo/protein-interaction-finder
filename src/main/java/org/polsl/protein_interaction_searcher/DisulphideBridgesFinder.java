@@ -21,8 +21,6 @@ public class DisulphideBridgesFinder {
         ArrayList<Atom> atoms = pdbStructureParser.getAtoms(desiredAtoms, allowedAminoAcids);
         List<List<Atom>> cysteines = Lists.partition(atoms, desiredAtoms.length);
 
-//        atoms.forEach((a) -> System.out.println(a.getGroup().getChain().getName()));
-
         ArrayList<DisulphideBridge> foundDisulphideBridges = new ArrayList<>();
 
         ListIterator<List<Atom>> cysteineItr = cysteines.listIterator();

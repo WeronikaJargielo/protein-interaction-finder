@@ -16,6 +16,9 @@ public class Main {
             System.out.println("\nSulphur-Aromatic interactions found:\nPosition Residue Chain Position Residue Chain dist phi1");
             for (Object interaction : searcher.findSulphurAromaticInteractions()) { System.out.println(interaction); }
 
+            System.out.println("\nAromatic-Aromatic interactions found:\nPosition Residue Chain Position Residue Chain dist");
+            for (Object interaction : searcher.findAromaticAromaticInteractions()) { System.out.println(interaction); }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -31,7 +31,8 @@ public final class ProteinInteractionSearcher {
     }
 
     public List<AromaticAromaticInteraction> findAromaticAromaticInteractions() {
-        return null;
+        AromaticAromaticInteractionFinder aromaticAromaticInteractionFinder = new AromaticAromaticInteractionFinder(pdbStructureParser);
+        return aromaticAromaticInteractionFinder.findAromaticAromaticInteraction();
     }
 
     public List<IonicInteraction> findIonicInteractions() {
