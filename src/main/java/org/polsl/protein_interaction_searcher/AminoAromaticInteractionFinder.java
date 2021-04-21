@@ -41,11 +41,19 @@ public class AminoAromaticInteractionFinder {
             Atom ringCentroid = aromaticRing.calculateCentroid();
 
             nitrogenAtoms.forEach((n -> {
-                double dist = Calc.getDistance(ringCentroid, n);
+                final double dist = Calc.getDistance(ringCentroid, n);
                 // TODO: Calculating the angle.
-                if (dist > criticalDistFrom && dist < criticalDistTo) {
-                    foundInteractions.add(new AminoAromaticInteraction(new AminoAcid(aromaticRing.getAminoAcid()), new AminoAcid(n.getGroup()), dist));
+                final double polarAngle = aromaticRing.calculatePolarAngleOfAtom(n);
+                final double equatorialAngle;
+                try {
+                    equatorialAngle = aromaticRing.calculateEquatorialAngleOfAtom(n);
+                    if (dist > criticalDistFrom && dist < criticalDistTo) {
+                        foundInteractions.add(new AminoAromaticInteraction(new AminoAcid(aromaticRing.getAminoAcid()), new AminoAcid(n.getGroup()),
+                                                                           dist, polarAngle, equatorialAngle));
 
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }));
         });

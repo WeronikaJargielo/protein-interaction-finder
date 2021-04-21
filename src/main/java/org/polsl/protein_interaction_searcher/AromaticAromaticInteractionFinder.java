@@ -30,13 +30,17 @@ public class AromaticAromaticInteractionFinder {
 
             remainingAromaticRingItr.forEachRemaining((aromaRing) -> {
                 double dist = Calc.getDistance(aromaticRing.calculateCentroid(), aromaRing.calculateCentroid());
-                // TODO: Calculating dihedral angle between two planes created by interacting aromatic rings.
+                double phi = getAngleBetweenRings(aromaticRing, aromaRing);
+
                 if (dist > distThresholdMin && dist < distThresholdMax) {
-                    foundInteractions.add(new AromaticAromaticInteraction(new AminoAcid(aromaticRing.getAminoAcid()), new AminoAcid(aromaRing.getAminoAcid()), dist));
+                    foundInteractions.add(new AromaticAromaticInteraction(new AminoAcid(aromaticRing.getAminoAcid()), new AminoAcid(aromaRing.getAminoAcid()), dist, phi));
                 }
             });
         }
-
         return foundInteractions;
+    }
+
+    private double getAngleBetweenRings(AromaticRing firstRing, AromaticRing secondRing) {
+        return firstRing.calculateNormalVector().angle(secondRing.calculateNormalVector())*(180/Math.PI);
     }
 }

@@ -2,15 +2,18 @@ package org.polsl.protein_interaction_searcher;
 
 public class AminoAromaticInteraction {
 
-    private AminoAcid aromaticAminoAcid;
-    private AminoAcid aminoAminoAcid;
-    private double distance;
-//    private double angle;
+    final private AminoAcid aromaticAminoAcid;
+    final private AminoAcid aminoAminoAcid;
+    final private double dist;
+    final private double polarAngle;
+    final private double equatorialAngle;
 
-    public AminoAromaticInteraction(AminoAcid aromaticAminoAcid, AminoAcid aminoAminoAcid, double distance) {
+    public AminoAromaticInteraction(AminoAcid aromaticAminoAcid, AminoAcid aminoAminoAcid, double dist, double polarAngle, double equatorialAngle) {
         this.aromaticAminoAcid = aromaticAminoAcid;
         this.aminoAminoAcid = aminoAminoAcid;
-        this.distance = distance;
+        this.dist = dist;
+        this.polarAngle = polarAngle;
+        this.equatorialAngle = equatorialAngle;
     }
 
     public AminoAcid getAromaticAminoAcid() {
@@ -21,17 +24,21 @@ public class AminoAromaticInteraction {
         return aminoAminoAcid;
     }
 
-    public double getDistance() {
-        return distance;
+    public double getDist() {
+        return dist;
     }
 
-//    public double getAngle() {
-//        return angle;
-//    }
+    public double getPolarAngle() {
+        return polarAngle;
+    }
+
+    public double getEquatorialAngle() {
+        return equatorialAngle;
+    }
 
     @Override
     public String toString() {
-//        return "" + aromaticAminoAcid + '\t' + aminoAminoAcid + '\t' + distance + '\t' + angle;
-        return "" + aromaticAminoAcid + '\t' +  aminoAminoAcid + '\t' + distance;
+        return "" + aromaticAminoAcid + '\t' +  aminoAminoAcid + '\t' + MathHelper.round(dist) + '\t'
+                  + MathHelper.round(polarAngle) + '\t' + MathHelper.round(equatorialAngle);
     }
 }

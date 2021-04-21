@@ -13,6 +13,8 @@ public final class ProteinInteractionSearcher {
     }
 
     public List<HydrogenBond> findHydrogenBonds() {
+//        HydrogenBondFinder hydrogenBondFinder = new HydrogenBondFinder(pdbStructureParser);
+//        return hydrogenBondFinder.findHydrogenBond();
         return null;
     }
 
@@ -37,7 +39,8 @@ public final class ProteinInteractionSearcher {
     }
 
     public List<IonicInteraction> findIonicInteractions() {
-        return null;
+        IonicInteractionFinder ionicInteractionFinder = new IonicInteractionFinder(pdbStructureParser);
+        return ionicInteractionFinder.findIonicInteractions();
     }
 
     public List<HydrophobicInteraction> findHydrophobicInteractions() {

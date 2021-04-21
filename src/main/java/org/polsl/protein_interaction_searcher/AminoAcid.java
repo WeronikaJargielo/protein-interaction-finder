@@ -25,24 +25,12 @@ public class AminoAcid {
         return position;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
     public AminoAcidAbbreviations getAbbreviation() {
         return abbreviation;
     }
 
-    public void setAbbreviation(AminoAcidAbbreviations abbreviation) {
-        this.abbreviation = abbreviation;
-    }
-
     public String getChain() {
         return chain;
-    }
-
-    public void setChain(String chain) {
-        this.chain = chain;
     }
 
     @Override

@@ -37,11 +37,18 @@ public class SulphurAromaticInteractionsFinder {
             Atom ringCentroid = aromaticRing.calculateCentroid();
 
             sulphurAtoms.forEach((s -> {
-                double dist = Calc.getDistance(ringCentroid, s);
-                // TODO: Calculating elevation angle and equatorial angle.
-                if (dist > criticalDistFrom && dist < criticalDistTo) {
-                    foundInteractions.add(new SulphurAromaticInteraction(new AminoAcid(aromaticRing.getAminoAcid()), new AminoAcid(s.getGroup()), dist));
+                final double dist = Calc.getDistance(ringCentroid, s);
+                final double elevationAngle = aromaticRing.calculateElevationAngleOfAtom(s);
+                final double equatorialAngle;
+                try {
+                    equatorialAngle = aromaticRing.calculateEquatorialAngleOfAtom(s);
+                    if (dist > criticalDistFrom && dist < criticalDistTo) {
+                        foundInteractions.add(new SulphurAromaticInteraction(new AminoAcid(aromaticRing.getAminoAcid()), new AminoAcid(s.getGroup()),
+                                                                             dist, elevationAngle, equatorialAngle));
 
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }));
         });

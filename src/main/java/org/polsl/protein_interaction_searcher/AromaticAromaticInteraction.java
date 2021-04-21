@@ -3,16 +3,18 @@ package org.polsl.protein_interaction_searcher;
 public class AromaticAromaticInteraction {
     private AminoAcid firstInteractee;
     private AminoAcid secondInteractee;
-    private double distance;
+    private double dist;
+    private double phi;
 
-    public AromaticAromaticInteraction(AminoAcid firstInteractee, AminoAcid secondInteractee, double distance) {
+    public AromaticAromaticInteraction(AminoAcid firstInteractee, AminoAcid secondInteractee, double dist, double phi) {
         this.firstInteractee = firstInteractee;
         this.secondInteractee = secondInteractee;
-        this.distance = distance;
+        this.dist = dist;
+        this.phi = phi;
     }
 
     @Override
     public String toString() {
-        return "" + firstInteractee + '\t'+ secondInteractee + '\t' + distance;
+        return "" + firstInteractee + '\t'+ secondInteractee + '\t' + dist + '\t' + phi;
     }
 }

@@ -17,6 +17,10 @@ final class PdbStructureParser {
         proteinStructure = readProteinStructure(pdbFilename);
     }
 
+    public Structure getProteinStructure() {
+        return proteinStructure;
+    }
+
     private Structure readProteinStructure(String pdbFilename) throws IOException, StructureException {
         return StructureIO.getStructure(pdbFilename);
     }

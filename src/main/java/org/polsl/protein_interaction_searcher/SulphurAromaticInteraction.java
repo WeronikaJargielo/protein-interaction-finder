@@ -2,14 +2,18 @@ package org.polsl.protein_interaction_searcher;
 
 public class SulphurAromaticInteraction {
 
-    private AminoAcid aromaticAminoAcid;
-    private AminoAcid sulphurAminoAcid;
-    private double distance;
+    final private AminoAcid aromaticAminoAcid;
+    final private AminoAcid sulphurAminoAcid;
+    final private double dist;
+    final private double elevationAngle;
+    final private double equatorialAngle;
 
-    public SulphurAromaticInteraction(AminoAcid aromaticAminoAcid, AminoAcid sulphurAminoAcid, double distance) {
+    public SulphurAromaticInteraction(AminoAcid aromaticAminoAcid, AminoAcid sulphurAminoAcid, double dist, double elevationAngle, double equatorialAngle) {
         this.aromaticAminoAcid = aromaticAminoAcid;
         this.sulphurAminoAcid = sulphurAminoAcid;
-        this.distance = distance;
+        this.dist = dist;
+        this.elevationAngle = elevationAngle;
+        this.equatorialAngle = equatorialAngle;
     }
 
     public AminoAcid getAromaticAminoAcid() {
@@ -20,12 +24,21 @@ public class SulphurAromaticInteraction {
         return sulphurAminoAcid;
     }
 
-    public double getDistance() {
-        return distance;
+    public double getDist() {
+        return dist;
+    }
+
+    public double getElevationAngle() {
+        return elevationAngle;
+    }
+
+    public double getEquatorialAngle() {
+        return equatorialAngle;
     }
 
     @Override
     public String toString() {
-        return "" + aromaticAminoAcid + '\t' + sulphurAminoAcid + '\t' + distance;
+        return "" + aromaticAminoAcid + '\t' + sulphurAminoAcid + '\t' + MathHelper.round(dist) + '\t'
+                  + MathHelper.round(elevationAngle) + '\t' + MathHelper.round(equatorialAngle);
     }
 }
