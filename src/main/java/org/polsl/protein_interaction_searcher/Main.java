@@ -5,7 +5,8 @@ public class Main {
 //        String filename = "C:\\Users\\user\\Desktop\\Studia\\Semestr_9\\mgr\\ProteinInteractionSearcher\\src\\proteins\\7jgy.pdb";
 //        String filename = "C:\\Users\\user\\Desktop\\Studia\\Semestr_9\\mgr\\ProteinInteractionSearcher\\src\\proteins\\2bi6.pdb";
 //        Str ing filename = "C:\\Users\\user\\Desktop\\Studia\\Semestr_9\\mgr\\ProteinInteractionSearcher\\src\\proteins\\6vga.pdb";
-        String filename = "C:\\Users\\user\\Desktop\\Studia\\Semestr_9\\mgr\\ProteinInteractionSearcher\\src\\proteins\\6hpj.pdb";
+//        String filename = "C:\\Users\\user\\Desktop\\Studia\\Semestr_9\\mgr\\ProteinInteractionSearcher\\src\\proteins\\6hpj.pdb";
+        String filename = "C:\\Users\\user\\Desktop\\Studia\\Semestr_9\\mgr\\ProteinInteractionSearcher\\src\\proteins\\6ujv.pdb";
         try {
             ProteinInteractionSearcher searcher = new ProteinInteractionSearcher(filename);
 //            System.out.println("Hydrophobic interactions found:\nPosition Residue Chain Position Residue Chain Dist");
@@ -17,8 +18,8 @@ public class Main {
 //            System.out.println("\nSulphur-Aromatic interactions found:\nPosition Residue Chain Position Residue Chain Dist ElevationAngle EquatorialAngle");
 //            for (Object interaction : searcher.findSulphurAromaticInteractions()) { System.out.println(interaction); }
 //
-//            System.out.println("\nAromatic-Aromatic interactions found:\nPosition Residue Chain Position Residue Chain Dist Phi");
-//            for (Object interaction : searcher.findAromaticAromaticInteractions()) { System.out.println(interaction); }
+            System.out.println("\nAromatic-Aromatic interactions found:\nPosition Residue Chain Position Residue Chain Dist Phi");
+            for (Object interaction : searcher.findAromaticAromaticInteractions()) { System.out.println(interaction); }
 //
             System.out.println("\nAmino-Aromatic interactions found:\nPosition Residue Chain Position Residue Chain Dist PolarAngle EquatorialAngle");
             for (Object interaction : searcher.findAminoAromaticInteractions()) { System.out.println(interaction); }

@@ -41,6 +41,6 @@ public class AromaticAromaticInteractionFinder {
     }
 
     private double getAngleBetweenRings(AromaticRing firstRing, AromaticRing secondRing) {
-        return firstRing.calculateNormalVector().angle(secondRing.calculateNormalVector())*(180/Math.PI);
+        return MathHelper.radiansToDegrees(firstRing.calculateNormalVector().angle(secondRing.calculateNormalVector()));
     }
 }

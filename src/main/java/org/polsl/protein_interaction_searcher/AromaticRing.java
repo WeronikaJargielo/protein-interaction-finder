@@ -6,7 +6,6 @@ import org.biojava.nbio.structure.Group;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,6 +14,7 @@ public class AromaticRing {
     private final Atom[] atoms;
     private final Group aminoAcid;
     private final Atom ringCentroid;
+    private final Vector3d normalVector;
 
     public AromaticRing(List<Atom> atoms) {
         this.atoms = new Atom[atoms.size()];
@@ -22,6 +22,7 @@ public class AromaticRing {
 
         this.aminoAcid = this.atoms[0].getGroup();
         this.ringCentroid = this.calculateCentroid();
+        this.normalVector = this.calculateNormalVector();
     }
 
     public Atom[] getAtoms() {
@@ -37,47 +38,75 @@ public class AromaticRing {
     }
 
     public Vector3d calculateNormalVector() {
-        final int indA = 0; final int indB = 1; final int indC = 2;
-        final Vector3d BA = MathHelper.calculateVector(atoms[indB], atoms[indA]);
-        final Vector3d BC = MathHelper.calculateVector(atoms[indB], atoms[indC]);
+        final String atomNameForBeginVec;
+        final String atomNameForEndVec;
 
-        return MathHelper.calculateCrossProduct(BA, BC);
+        switch (AminoAcidAbbreviations.valueOf(aminoAcid.getPDBName())) {
+            case TYR:
+            case PHE:
+                atomNameForBeginVec = "CD1"; atomNameForEndVec = "CG";
+                break;
+            case TRP:
+                if (this.atoms.length == 5) {
+                    atomNameForBeginVec = "CD1"; atomNameForEndVec = "CG";
+                } else {
+                    atomNameForBeginVec = "CE2"; atomNameForEndVec = "CD2";
+                }
+                break;
+            default:
+                return null;
+        }
+
+        final Atom atomForBeginVec = this.findAtomInRingAtoms(atomNameForBeginVec);
+        final Atom atomForEndVec = this.findAtomInRingAtoms(atomNameForEndVec);
+
+        final Vector3d beginVec = MathHelper.calculateVector(this.ringCentroid, atomForBeginVec);
+        final Vector3d endVec = MathHelper.calculateVector(this.ringCentroid, atomForEndVec);
+
+        return MathHelper.calculateCrossProduct(beginVec, endVec);
     }
 
     public double calculatePolarAngleOfAtom(Atom atom) {
-        final Vector3d normalVec = this.calculateNormalVector();
         final Vector3d centroidAtomVec = MathHelper.calculateVector(this.calculateCentroid(), atom);
 
-        return normalVec.angle(centroidAtomVec)*(180/Math.PI);
+        return MathHelper.radiansToDegrees(this.normalVector.angle(centroidAtomVec));
     }
 
     public double calculateElevationAngleOfAtom(Atom atom) {
         return Math.abs(90 - this.calculatePolarAngleOfAtom(atom));
     }
 
-    public double calculateEquatorialAngleOfAtom(Atom atom) throws Exception {
+    public double calculateEquatorialAngleOfAtom(Atom atom) {
         final Vector3d centroidToRingAtomVec = MathHelper.calculateVector(this.ringCentroid, this.getRingAtomForEquatorialAngle());
         final Point3d atomProjection = this.calculateAtomProjectionOnRing(atom);
         final Vector3d centroidAtomProjectionVec = MathHelper.calculateVector(this.ringCentroid.getCoordsAsPoint3d(), atomProjection);
 
-        return centroidToRingAtomVec.angle(centroidAtomProjectionVec)*(180/Math.PI);
+        final double cosine = (centroidToRingAtomVec.dot(centroidAtomProjectionVec)) / (centroidToRingAtomVec.length()*centroidAtomProjectionVec.length());
+        final double sine = MathHelper.calculateCrossProduct(this.normalVector, centroidToRingAtomVec).dot(centroidAtomProjectionVec) / (centroidToRingAtomVec.length()*centroidAtomProjectionVec.length());
+
+        final double equatorialAngle;
+        if (sine >= 0) {
+            equatorialAngle = Math.acos(cosine);
+        } else {
+            equatorialAngle = 2*Math.PI - Math.acos(cosine);
+        }
+        return MathHelper.radiansToDegrees(equatorialAngle);
     }
 
     public Point3d calculateAtomProjectionOnRing(Atom atom) {
-        final Vector3d normalVec = this.calculateNormalVector();
-        final Atom ringAtom = atoms[0];
+        final Atom anyRingAtom = atoms[0];
 
         // Plane equation: Ax + By + Cz + D = 0 => D = -(Ax + By + Cz)
-        final double DCoefficient = -(normalVec.dot(new Vector3d(ringAtom.getCoordsAsPoint3d())));
+        final double DCoefficient = -(this.normalVector.dot(new Vector3d(anyRingAtom.getCoordsAsPoint3d())));
 
-        final double t = - (DCoefficient + normalVec.dot(new Vector3d(atom.getCoordsAsPoint3d())))/normalVec.lengthSquared();
+        final double t = - (DCoefficient + this.normalVector.dot(new Vector3d(atom.getCoordsAsPoint3d()))) / this.normalVector.lengthSquared();
 
-        return new Point3d(normalVec.x*t + atom.getX(),
-                          normalVec.y*t + atom.getY(),
-                          normalVec.z*t + atom.getZ());
+        return new Point3d(this.normalVector.x*t + atom.getX(),
+                          this.normalVector.y*t + atom.getY(),
+                          this.normalVector.z*t + atom.getZ());
     }
 
-    private Atom getRingAtomForEquatorialAngle() throws Exception {
+    private Atom getRingAtomForEquatorialAngle() {
         final String desiredAtom;
 
         switch (AminoAcidAbbreviations.valueOf(aminoAcid.getPDBName())) {
@@ -86,15 +115,18 @@ public class AromaticRing {
                 desiredAtom = "CZ";
                 break;
             case TRP:
-                desiredAtom = this.atoms.length == 5 ? "NE1" : "CZ";
+                desiredAtom = this.atoms.length == 5 ? "NE1" : "CZ2";
                 break;
             default:
-                throw new Exception("This amino acid does not have any aromatic rings.");
+                return null;
         }
+       return findAtomInRingAtoms(desiredAtom);
+    }
 
+    private Atom findAtomInRingAtoms(String pdbAtomName) {
         return Arrays.stream(atoms)
-                     .filter(atom -> atom.getName().equals(desiredAtom))
-                     .findFirst()
-                     .orElse(null);
+                .filter(atom -> atom.getName().equals(pdbAtomName))
+                .findFirst()
+                .orElse(null);
     }
 }

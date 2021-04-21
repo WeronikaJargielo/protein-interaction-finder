@@ -7,6 +7,8 @@ import javax.vecmath.Vector3d;
 
 public class MathHelper {
 
+    private static final double radiansToDegreesCoefficient = (180/Math.PI);
+
     public static Vector3d calculateVector(Point3d begin, Point3d end) {
         return new Vector3d(end.x-begin.x, end.y-begin.y, end.z-begin.z);
     }
@@ -26,5 +28,9 @@ public class MathHelper {
 
     public static double round(double number) {
         return (double) Math.round(number*100)/100;
+    }
+
+    public static double radiansToDegrees(final double angleInRadians) {
+        return angleInRadians*radiansToDegreesCoefficient;
     }
 }

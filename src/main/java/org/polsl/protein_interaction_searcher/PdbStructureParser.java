@@ -46,7 +46,8 @@ final class PdbStructureParser {
         List<Atom> phenylalanineAtoms = getAtoms(new String[]{"CG", "CD1", "CD2", "CE1", "CE2", "CZ"}, Arrays.asList(AminoAcidAbbreviations.PHE));
         List<Atom> tyrosineAtoms = getAtoms(new String[]{"CG", "CD1", "CD2", "CE1", "CE2", "CZ"}, Arrays.asList(AminoAcidAbbreviations.TYR));
 
-        List<Atom> tryptophanPyrroleRingAtoms = getAtoms(new String[]{"CG", "CD1", "CD2", "CE1", "CE2"}, Arrays.asList(AminoAcidAbbreviations.TRP));
+//        List<Atom> tryptophanPyrroleRingAtoms = getAtoms(new String[]{"CG", "CD1", "CD2", "CE1", "CE2"}, Arrays.asList(AminoAcidAbbreviations.TRP));
+        List<Atom> tryptophanPyrroleRingAtoms = getAtoms(new String[]{"CG", "CD1", "CD2", "NE1", "CE2"}, Arrays.asList(AminoAcidAbbreviations.TRP));
         List<Atom> tryptophanBenzeneRingAtoms = getAtoms(new String[]{"CD2", "CE2", "CE3", "CZ2", "CZ3", "CH2"}, Arrays.asList(AminoAcidAbbreviations.TRP));
 
         List<List<Atom>> phe = Lists.partition(phenylalanineAtoms, 6);
