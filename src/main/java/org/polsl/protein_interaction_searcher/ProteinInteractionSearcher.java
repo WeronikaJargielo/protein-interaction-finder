@@ -12,10 +12,19 @@ public final class ProteinInteractionSearcher {
         pdbStructureParser = new PdbStructureParser(pdbFilename);
     }
 
-    public List<HydrogenBond> findHydrogenBonds() {
-//        HydrogenBondFinder hydrogenBondFinder = new HydrogenBondFinder(pdbStructureParser);
-//        return hydrogenBondFinder.findHydrogenBond();
-        return null;
+    public List<HydrogenBond> findMainMainHydrogenBonds() {
+        HydrogenBondFinder hydrogenBondFinder = new HydrogenBondFinder(pdbStructureParser);
+        return hydrogenBondFinder.findMainMainHydrogenBonds();
+    }
+
+    public List<HydrogenBond> findSideSideHydrogenBonds() {
+        HydrogenBondFinder hydrogenBondFinder = new HydrogenBondFinder(pdbStructureParser);
+        return hydrogenBondFinder.findSideSideHydrogenBonds();
+    }
+
+    public List<HydrogenBond> findMainSideHydrogenBonds() {
+        HydrogenBondFinder hydrogenBondFinder = new HydrogenBondFinder(pdbStructureParser);
+        return hydrogenBondFinder.findMainSideHydrogenBonds();
     }
 
     public List<DisulphideBridge> findDisulphideBridges() {

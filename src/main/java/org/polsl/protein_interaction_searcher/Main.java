@@ -18,18 +18,20 @@ public class Main {
 //            System.out.println("\nSulphur-Aromatic interactions found:\nPosition Residue Chain Position Residue Chain Dist ElevationAngle EquatorialAngle");
 //            for (Object interaction : searcher.findSulphurAromaticInteractions()) { System.out.println(interaction); }
 //
-            System.out.println("\nAromatic-Aromatic interactions found:\nPosition Residue Chain Position Residue Chain Dist Phi");
-            for (Object interaction : searcher.findAromaticAromaticInteractions()) { System.out.println(interaction); }
+//            System.out.println("\nAromatic-Aromatic interactions found:\nPosition Residue Chain Position Residue Chain Dist Phi");
+//            for (Object interaction : searcher.findAromaticAromaticInteractions()) { System.out.println(interaction); }
 //
-            System.out.println("\nAmino-Aromatic interactions found:\nPosition Residue Chain Position Residue Chain Dist PolarAngle EquatorialAngle");
-            for (Object interaction : searcher.findAminoAromaticInteractions()) { System.out.println(interaction); }
-//
-//            System.out.println("\nIonic interactions found:\nPosition Residue Chain Position Residue Chain Dist");
-//            for (Object interaction : searcher.findIonicInteractions()) { System.out.println(interaction); }
+//            System.out.println("\nAmino-Aromatic interactions found:\nPosition Residue Chain Position Residue Chain Dist PolarAngle EquatorialAngle");
+//            for (Object interaction : searcher.findAminoAromaticInteractions()) { System.out.println(interaction); }
 
-//            System.out.println("\nHydrogen bonds found:\nDonor Acceptor\nPosition Residue Chain Position Residue Chain DistHA DistDA PhiDHA PhiHAAp PhiDAAp");
-//            searcher.findHydrogenBonds();
-//            for (Object interaction : searcher.findHydrogenBonds()) { System.out.println(interaction); }
+            System.out.println("\nMain Chain-Main Chain Hydrogen bonds found:\nDonor Acceptor\nPosition Residue Chain Position D H A Aa Residue Chain DistHA DistDA PhiDHA PhiHAAa PhiDAAa");
+            for (Object interaction : searcher.findMainMainHydrogenBonds()) { System.out.println(interaction); }
+
+            System.out.println("\nMain Chain-Side Chain Hydrogen bonds found:\nDonor Acceptor\nPosition Residue Chain Position D H A Aa Residue Chain DistHA DistDA PhiDHA PhiHAAa PhiDAAa");
+            for (Object interaction : searcher.findMainSideHydrogenBonds()) { System.out.println(interaction); }
+
+            System.out.println("\nSide Chain-Side Chain Hydrogen bonds found:\nDonor Acceptor\nPosition Residue Chain Position D H A Aa Residue Chain DistHA DistDA PhiDHA PhiHAAa PhiDAAa");
+            for (Object interaction : searcher.findSideSideHydrogenBonds()) { System.out.println(interaction); }
 
         } catch (Exception e) {
             e.printStackTrace();

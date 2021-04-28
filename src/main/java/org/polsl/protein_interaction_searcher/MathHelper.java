@@ -33,4 +33,13 @@ public class MathHelper {
     public static double radiansToDegrees(final double angleInRadians) {
         return angleInRadians*radiansToDegreesCoefficient;
     }
+
+    public static double angle(Atom firstAtom, Atom secondAtom, Atom thirdAtom) {
+        Vector3d secondFirstVec = calculateVector(secondAtom, firstAtom);
+        Vector3d secondThirdVec = calculateVector(secondAtom, thirdAtom);
+
+        return radiansToDegrees(secondFirstVec.angle(secondThirdVec));
+    }
+
+
 }
