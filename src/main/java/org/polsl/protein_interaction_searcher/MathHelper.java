@@ -5,7 +5,7 @@ import org.biojava.nbio.structure.Atom;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-public class MathHelper {
+public final class MathHelper {
 
     private static final double radiansToDegreesCoefficient = (180/Math.PI);
 
@@ -35,8 +35,8 @@ public class MathHelper {
     }
 
     public static double angle(Atom firstAtom, Atom secondAtom, Atom thirdAtom) {
-        Vector3d secondFirstVec = calculateVector(secondAtom, firstAtom);
-        Vector3d secondThirdVec = calculateVector(secondAtom, thirdAtom);
+        final Vector3d secondFirstVec = calculateVector(secondAtom, firstAtom);
+        final Vector3d secondThirdVec = calculateVector(secondAtom, thirdAtom);
 
         return radiansToDegrees(secondFirstVec.angle(secondThirdVec));
     }

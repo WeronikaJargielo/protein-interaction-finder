@@ -1,17 +1,19 @@
 package org.polsl.protein_interaction_searcher;
 
-public class SulphurAromaticInteraction {
+import java.util.Objects;
 
-    final private AminoAcid aromaticAminoAcid;
-    final private AminoAcid sulphurAminoAcid;
-    final private double dist;
-    final private double elevationAngle;
-    final private double equatorialAngle;
+public final class SulphurAromaticInteraction {
 
-    public SulphurAromaticInteraction(AminoAcid aromaticAminoAcid, AminoAcid sulphurAminoAcid, double dist, double elevationAngle, double equatorialAngle) {
+    private final AminoAcid aromaticAminoAcid;
+    private final AminoAcid sulphurAminoAcid;
+    private final double distanceBtwRingSulphur;
+    private final double elevationAngle;
+    private final double equatorialAngle;
+
+    public SulphurAromaticInteraction(AminoAcid aromaticAminoAcid, AminoAcid sulphurAminoAcid, double distanceBtwRingSulphur, double elevationAngle, double equatorialAngle) {
         this.aromaticAminoAcid = aromaticAminoAcid;
         this.sulphurAminoAcid = sulphurAminoAcid;
-        this.dist = dist;
+        this.distanceBtwRingSulphur = distanceBtwRingSulphur;
         this.elevationAngle = elevationAngle;
         this.equatorialAngle = equatorialAngle;
     }
@@ -24,8 +26,8 @@ public class SulphurAromaticInteraction {
         return sulphurAminoAcid;
     }
 
-    public double getDist() {
-        return dist;
+    public double getDistanceBtwRingSulphur() {
+        return distanceBtwRingSulphur;
     }
 
     public double getElevationAngle() {
@@ -37,8 +39,25 @@ public class SulphurAromaticInteraction {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SulphurAromaticInteraction that = (SulphurAromaticInteraction) o;
+        return Double.compare(that.distanceBtwRingSulphur, distanceBtwRingSulphur) == 0
+                              && Double.compare(that.elevationAngle, elevationAngle) == 0
+                              && Double.compare(that.equatorialAngle, equatorialAngle) == 0
+                              && Objects.equals(aromaticAminoAcid, that.aromaticAminoAcid)
+                              && Objects.equals(sulphurAminoAcid, that.sulphurAminoAcid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(aromaticAminoAcid, sulphurAminoAcid, distanceBtwRingSulphur, elevationAngle, equatorialAngle);
+    }
+
+    @Override
     public String toString() {
-        return "" + aromaticAminoAcid + '\t' + sulphurAminoAcid + '\t' + MathHelper.round(dist) + '\t'
+        return "" + aromaticAminoAcid + '\t' + sulphurAminoAcid + '\t' + MathHelper.round(distanceBtwRingSulphur) + '\t'
                   + MathHelper.round(elevationAngle) + '\t' + MathHelper.round(equatorialAngle);
     }
 }

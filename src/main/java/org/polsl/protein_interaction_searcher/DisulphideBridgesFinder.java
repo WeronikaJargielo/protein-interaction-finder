@@ -7,7 +7,7 @@ import org.biojava.nbio.structure.Calc;
 import java.util.*;
 
 public class DisulphideBridgesFinder {
-    private PdbStructureParser pdbStructureParser;
+    private final PdbStructureParser pdbStructureParser;
 
     private final List<AminoAcidAbbreviations> allowedAminoAcids = Arrays.asList(AminoAcidAbbreviations.CYS);
 
@@ -17,53 +17,53 @@ public class DisulphideBridgesFinder {
         this.pdbStructureParser = pdbStructureParser;
     }
 
-    public List<DisulphideBridge> findDisulphideBridges() {
+    public List<DisulphideBridge> findDisulphideBridges(DisulphideBridgeCriteria criteria) {
         ArrayList<Atom> atoms = pdbStructureParser.getAtoms(desiredAtoms, allowedAminoAcids);
         List<List<Atom>> cysteines = Lists.partition(atoms, desiredAtoms.length);
 
         ArrayList<DisulphideBridge> foundDisulphideBridges = new ArrayList<>();
 
-        ListIterator<List<Atom>> cysteineItr = cysteines.listIterator();
-        while(cysteineItr.hasNext()) {
-            List<Atom> cys = cysteineItr.next();
-
-            ListIterator<List<Atom>> remainingCysItr = cysteines.listIterator(cysteineItr.nextIndex());
-
-            remainingCysItr.forEachRemaining((c) -> {
-                DisulphideBridge disulphideBridge = getDisulphideBridge(cys.toArray(new Atom[0]), c.toArray(new Atom[0]));
+        final int cysteinesLen = cysteines.size();
+        for (int i = 0; i < cysteinesLen; ++i) {
+            for (int j = i + 1; j < cysteinesLen; ++j) {
+                final DisulphideBridge disulphideBridge = obtainDisulphideBridge(cysteines.get(i), cysteines.get(j), criteria);
 
                 if (disulphideBridge != null) {
                     foundDisulphideBridges.add(disulphideBridge);
                 }
-            });
-
+            }
         }
         return foundDisulphideBridges;
     }
 
-    private DisulphideBridge getDisulphideBridge(Atom[] firstCys, Atom[] secondCys) {
+    private DisulphideBridge obtainDisulphideBridge(List<Atom> firstCys, List<Atom> secondCys, DisulphideBridgeCriteria criteria) {
         final int indN = 0;
         final int indCA = 1;
         final int indCB = 2;
         final int indSG = 3;
 
-        double distCAs = Calc.getDistance(firstCys[indCA], secondCys[indCA]);
-        double distCBs = Calc.getDistance(firstCys[indCB], secondCys[indCB]);
-        if ( !(distCAs <= 6.5 && distCBs <= 4.5) ) { return null; }
+        final double distanceBtwCAs = Calc.getDistance(firstCys.get(indCA), secondCys.get(indCA));
+        final double distanceBtwCBs = Calc.getDistance(firstCys.get(indCB), secondCys.get(indCB));
+        if ( ! (distanceBtwCAs <= criteria.getDistanceBtwCAs() && distanceBtwCBs <= criteria.getDistanceBtwCBs()) ) { return null; }
 
-        double distSS = Calc.getDistance(firstCys[indSG], secondCys[indSG]);
-        if ( !(distSS >= 1.6 && distSS <= 2.4) ) { return null; }
+        final double distanceBtwSS = Calc.getDistance(firstCys.get(indSG), secondCys.get(indSG));
+        if ( ! (distanceBtwSS >= criteria.getMinDistanceBtwSulphurs() && distanceBtwSS <= criteria.getMaxDistanceBtwSulphurs()) ) { return null; }
 
-        double phiSS = Math.abs(Calc.torsionAngle(firstCys[indCB], firstCys[indSG], secondCys[indSG], secondCys[indCB]));
-        if ( !(phiSS >= 60 && phiSS <= 120) ) { return null; }
+        final double absDihAngleSS = Math.abs(Calc.torsionAngle(firstCys.get(indCB), firstCys.get(indSG), secondCys.get(indSG), secondCys.get(indCB)));
+        if ( ! (absDihAngleSS >= criteria.getMinAbsDihAngleSS() && absDihAngleSS <= criteria.getMaxAbsDihAngleSS()) ) { return null; }
 
-        double phi11 = Math.abs(Calc.torsionAngle(firstCys[indN], firstCys[indCA], firstCys[indCB], firstCys[indSG]));
-//        if ( ! ((phi11 >= 30 && phi11 <= 90) || (phi11 >= 150 && phi11 <= 180)) ) { return null; }
+        final double absDihAngle11 = Math.abs(Calc.torsionAngle(firstCys.get(indN), firstCys.get(indCA), firstCys.get(indCB), firstCys.get(indSG)));
+        if ( ! ((absDihAngle11 >= criteria.getLowerRangeMinAbsDihAngle11() && absDihAngle11 <= criteria.getLowerRangeMaxAbsDihAngle11())
+                 || (absDihAngle11 >= criteria.getUpperRangeMinAbsDihAngle11() && absDihAngle11 <= criteria.getUpperRangeMaxAbsDihAngle11())) ) { return null; }
 
-        double phi21 = Math.abs(Calc.torsionAngle(secondCys[indSG], secondCys[indCB], secondCys[indCA], secondCys[indN]));
-//        if ( ! ((phi21 >= 30 && phi21 <= 90) || (phi21 >= 150 && phi21 <= 180)) ) { return null; }
+        final double absDihAngle21 = Math.abs(Calc.torsionAngle(secondCys.get(indSG), secondCys.get(indCB), secondCys.get(indCA), secondCys.get(indN)));
+        if ( ! ((absDihAngle21 >= criteria.getLowerRangeMinAbsDihAngle21() && absDihAngle21 <= criteria.getLowerRangeMaxAbsDihAngle21())
+                || (absDihAngle21 >= criteria.getUpperRangeMinAbsDihAngle21() && absDihAngle21 <= criteria.getUpperRangeMaxAbsDihAngle21())) ) { return null; }
 
-        return new DisulphideBridge(new AminoAcid(firstCys[indSG].getGroup()), new AminoAcid(secondCys[indSG].getGroup()), distCAs, distCBs, distSS, phiSS, phi11, phi21);
+        return new DisulphideBridge(new AminoAcid(firstCys.get(indSG).getGroup()),
+                                    new AminoAcid(secondCys.get(indSG).getGroup()),
+                                    distanceBtwCAs, distanceBtwCBs, distanceBtwSS,
+                                    absDihAngleSS, absDihAngle11, absDihAngle21);
     }
 
 }

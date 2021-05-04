@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class SulphurAromaticInteractionsFinder {
+public final class SulphurAromaticInteractionsFinder {
 
-    private PdbStructureParser pdbStructureParser;
+    private final PdbStructureParser pdbStructureParser;
 
     private final String[] desiredAtomsMethionine = new String[] {"SD"};
     private final String[] desiredAtomsCysteine = new String[] {"SG"};
@@ -21,38 +21,44 @@ public class SulphurAromaticInteractionsFinder {
         this.pdbStructureParser = pdbStructureParser;
     }
 
-    public List<SulphurAromaticInteraction> findSulphurAromaticInteractions() {
-        ArrayList<Atom> atomsMethionine = pdbStructureParser.getAtoms(desiredAtomsMethionine, Arrays.asList(AminoAcidAbbreviations.MET));
-        ArrayList<Atom> atomsCysteine = pdbStructureParser.getAtoms(desiredAtomsCysteine, Arrays.asList(AminoAcidAbbreviations.CYS));
+    public List<SulphurAromaticInteraction> findSulphurAromaticInteractions(SulphurAromaticInteractionCriteria criteria) {
+        final ArrayList<Atom> atomsMethionine = pdbStructureParser.getAtoms(desiredAtomsMethionine, Arrays.asList(AminoAcidAbbreviations.MET));
+        final ArrayList<Atom> atomsCysteine = pdbStructureParser.getAtoms(desiredAtomsCysteine, Arrays.asList(AminoAcidAbbreviations.CYS));
 
-        List<Atom> sulphurAtoms = Stream.concat(atomsMethionine.stream(), atomsCysteine.stream()).collect(Collectors.toList());
-        ArrayList<AromaticRing> aromaticRings = pdbStructureParser.getAromaticRings();
+        final List<Atom> sulphurAtoms = Stream.concat(atomsMethionine.stream(), atomsCysteine.stream()).collect(Collectors.toList());
+        final ArrayList<AromaticRing> aromaticRings = pdbStructureParser.getAromaticRings();
 
-        double criticalDistFrom = 3;
-        double criticalDistTo = 6;
-
-        List<SulphurAromaticInteraction> foundInteractions = new ArrayList<>();
+        List<SulphurAromaticInteraction> foundSulphurAromaticInteractions = new ArrayList<>();
         aromaticRings.forEach((aromaticRing) -> {
+            sulphurAtoms.forEach((sulphur -> {
+                final SulphurAromaticInteraction sulphurAromaticInteraction = this.obtainSulphurAromaticInteraction(sulphur, aromaticRing, criteria);
 
-            Atom ringCentroid = aromaticRing.calculateCentroid();
-
-            sulphurAtoms.forEach((s -> {
-                final double dist = Calc.getDistance(ringCentroid, s);
-                final double elevationAngle = aromaticRing.calculateElevationAngleOfAtom(s);
-                final double equatorialAngle;
-                try {
-                    equatorialAngle = aromaticRing.calculateEquatorialAngleOfAtom(s);
-                    if (dist > criticalDistFrom && dist < criticalDistTo) {
-                        foundInteractions.add(new SulphurAromaticInteraction(new AminoAcid(aromaticRing.getAminoAcid()), new AminoAcid(s.getGroup()),
-                                                                             dist, elevationAngle, equatorialAngle));
-
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (sulphurAromaticInteraction != null) {
+                    foundSulphurAromaticInteractions.add(sulphurAromaticInteraction);
                 }
             }));
         });
+        return foundSulphurAromaticInteractions;
+    }
 
-        return foundInteractions;
+    private SulphurAromaticInteraction obtainSulphurAromaticInteraction(Atom sulphur, AromaticRing ring, SulphurAromaticInteractionCriteria criteria) {
+        final double distanceBtwSRing = Calc.getDistance(sulphur, ring.getRingCentroid());
+        if ( ! (distanceBtwSRing > criteria.getMinDistanceBtwRingSulphur() && distanceBtwSRing <= criteria.getMaxDistanceBtwRingSulphur()) ) {
+            return null;
+        }
+
+        final double elevationAngle = ring.calculateElevationAngleOfAtom(sulphur);
+        if ( ! (elevationAngle >= criteria.getMinElevationAngle() && elevationAngle <= criteria.getMaxElevationAngle()) ) {
+            return null;
+        }
+
+        final double equatorialAngle =  ring.calculateEquatorialAngleOfAtom(sulphur);
+        if ( ! (equatorialAngle >= criteria.getMinEquatorialAngle() && equatorialAngle <= criteria.getMaxEquatorialAngle()) ) {
+            return null;
+        }
+
+        return new SulphurAromaticInteraction(new AminoAcid(ring.getAminoAcid()),
+                                              new AminoAcid(sulphur.getGroup()),
+                                              distanceBtwSRing, elevationAngle, equatorialAngle);
     }
 }

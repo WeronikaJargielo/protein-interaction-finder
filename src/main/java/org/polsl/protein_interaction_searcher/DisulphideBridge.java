@@ -1,24 +1,30 @@
 package org.polsl.protein_interaction_searcher;
 
-public class DisulphideBridge {
-    private AminoAcid firstInteractee;
-    private AminoAcid secondInteractee;
-    private double distCAs;
-    private double distCBs;
-    private double distSS;
-    private double phiSS;
-    private double phi11;
-    private double phi21;;
+import java.util.Objects;
 
-    public DisulphideBridge(AminoAcid firstInteractee, AminoAcid secondInteractee, double distCAs, double distCBs, double distSS, double phiSS, double phi11, double phi21) {
+public class DisulphideBridge {
+    private final AminoAcid firstInteractee;
+    private final AminoAcid secondInteractee;
+    private final double distanceBtwCAs;
+    private final double distanceBtwCBs;
+    private final double distanceBtwSS;
+    private final double absDihAngleSS;
+    private final double absDihAngle11;
+    private final double absDihAngle21;
+
+
+    public DisulphideBridge(AminoAcid firstInteractee, AminoAcid secondInteractee,
+                            double distanceBtwCAs, double distanceBtwCBs, double distanceBtwSS,
+                            double absDihAngleSS, double absDihAngle11, double absDihAngle21) {
+
         this.firstInteractee = firstInteractee;
         this.secondInteractee = secondInteractee;
-        this.distCAs = distCAs;
-        this.distCBs = distCBs;
-        this.distSS = distSS;
-        this.phiSS = phiSS;
-        this.phi11 = phi11;
-        this.phi21 = phi21;
+        this.distanceBtwCAs = distanceBtwCAs;
+        this.distanceBtwCBs = distanceBtwCBs;
+        this.distanceBtwSS = distanceBtwSS;
+        this.absDihAngleSS = absDihAngleSS;
+        this.absDihAngle11 = absDihAngle11;
+        this.absDihAngle21 = absDihAngle21;
     }
 
     public AminoAcid getFirstInteractee() {
@@ -29,34 +35,56 @@ public class DisulphideBridge {
         return secondInteractee;
     }
 
-    public double getDistCAs() {
-        return distCAs;
+    public double getDistanceBtwCAs() {
+        return distanceBtwCAs;
     }
 
-    public double getDistCBs() {
-        return distCBs;
+    public double getDistanceBtwCBs() {
+        return distanceBtwCBs;
     }
 
-    public double getDistSS() {
-        return distSS;
+    public double getDistanceBtwSS() {
+        return distanceBtwSS;
     }
 
-    public double getPhiSS() {
-        return phiSS;
+    public double getAbsDihAngleSS() {
+        return absDihAngleSS;
     }
 
-    public double getPhi11() {
-        return phi11;
+    public double getAbsDihAngle11() {
+        return absDihAngle11;
     }
 
-    public double getPhi21() {
-        return phi21;
+    public double getAbsDihAngle21() {
+        return absDihAngle21;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DisulphideBridge that = (DisulphideBridge) o;
+        return Double.compare(that.distanceBtwCAs, distanceBtwCAs) == 0
+                && Double.compare(that.distanceBtwCBs, distanceBtwCBs) == 0
+                && Double.compare(that.distanceBtwSS, distanceBtwSS) == 0
+                && Double.compare(that.absDihAngleSS, absDihAngleSS) == 0
+                && Double.compare(that.absDihAngle11, absDihAngle11) == 0
+                && Double.compare(that.absDihAngle21, absDihAngle21) == 0
+                && Objects.equals(firstInteractee, that.firstInteractee)
+                && Objects.equals(secondInteractee, that.secondInteractee);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstInteractee, secondInteractee,
+                            distanceBtwCAs, distanceBtwCBs, distanceBtwSS,
+                            absDihAngleSS, absDihAngle11, absDihAngle21);
     }
 
     @Override
     public String toString() {
         return "" + firstInteractee + "\t" + secondInteractee
-                  + "\t" + distCAs + "\t" + distCBs + "\t" + distSS
-                  + "\t" + phiSS + "\t" + phi11 + "\t" + phi21;
+                  + "\t" + MathHelper.round(distanceBtwCAs) + "\t" + MathHelper.round(distanceBtwCBs) + "\t" + MathHelper.round(distanceBtwSS)
+                  + "\t" + MathHelper.round(absDihAngleSS) + "\t" + MathHelper.round(absDihAngle11) + "\t" + MathHelper.round(absDihAngle21);
     }
 }

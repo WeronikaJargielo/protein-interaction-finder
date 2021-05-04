@@ -1,19 +1,21 @@
 package org.polsl.protein_interaction_searcher;
 
-public class AminoAromaticInteraction {
+import java.util.Objects;
+
+public final class AminoAromaticInteraction {
 
     final private AminoAcid aromaticAminoAcid;
     final private AminoAcid aminoAminoAcid;
-    final private double dist;
+    final private double distanceBtwCationRing;
     final private double polarAngle;
-    final private double equatorialAngle;
+    final private double azimuthalAngle;
 
-    public AminoAromaticInteraction(AminoAcid aromaticAminoAcid, AminoAcid aminoAminoAcid, double dist, double polarAngle, double equatorialAngle) {
+    public AminoAromaticInteraction(AminoAcid aromaticAminoAcid, AminoAcid aminoAminoAcid, double distanceBtwCationRing, double polarAngle, double azimuthalAngle) {
         this.aromaticAminoAcid = aromaticAminoAcid;
         this.aminoAminoAcid = aminoAminoAcid;
-        this.dist = dist;
+        this.distanceBtwCationRing = distanceBtwCationRing;
         this.polarAngle = polarAngle;
-        this.equatorialAngle = equatorialAngle;
+        this.azimuthalAngle = azimuthalAngle;
     }
 
     public AminoAcid getAromaticAminoAcid() {
@@ -24,21 +26,38 @@ public class AminoAromaticInteraction {
         return aminoAminoAcid;
     }
 
-    public double getDist() {
-        return dist;
+    public double getDistanceBtwCationRing() {
+        return distanceBtwCationRing;
     }
 
     public double getPolarAngle() {
         return polarAngle;
     }
 
-    public double getEquatorialAngle() {
-        return equatorialAngle;
+    public double getAzimuthalAngle() {
+        return azimuthalAngle;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AminoAromaticInteraction that = (AminoAromaticInteraction) o;
+        return Double.compare(that.distanceBtwCationRing, distanceBtwCationRing) == 0
+                              && Double.compare(that.polarAngle, polarAngle) == 0
+                              && Double.compare(that.azimuthalAngle, azimuthalAngle) == 0
+                              && Objects.equals(aromaticAminoAcid, that.aromaticAminoAcid)
+                              && Objects.equals(aminoAminoAcid, that.aminoAminoAcid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(aromaticAminoAcid, aminoAminoAcid, distanceBtwCationRing, polarAngle, azimuthalAngle);
     }
 
     @Override
     public String toString() {
-        return "" + aromaticAminoAcid + '\t' +  aminoAminoAcid + '\t' + MathHelper.round(dist) + '\t'
-                  + MathHelper.round(polarAngle) + '\t' + MathHelper.round(equatorialAngle);
+        return "" + aromaticAminoAcid + '\t' +  aminoAminoAcid + '\t' + MathHelper.round(distanceBtwCationRing) + '\t'
+                  + MathHelper.round(polarAngle) + '\t' + MathHelper.round(azimuthalAngle);
     }
 }

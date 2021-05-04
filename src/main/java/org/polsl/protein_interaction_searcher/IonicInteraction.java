@@ -1,15 +1,17 @@
 package org.polsl.protein_interaction_searcher;
 
+import java.util.Objects;
+
 public class IonicInteraction {
 
-    private AminoAcid anionicAminoAcid;
-    private AminoAcid cationicAminoAcid;
-    private double distance;
+    private final AminoAcid anionicAminoAcid;
+    private final AminoAcid cationicAminoAcid;
+    private final double distanceBtwCentroids;
 
-    public IonicInteraction(AminoAcid anionicAminoAcid, AminoAcid cationicAminoAcid, double distance) {
+    public IonicInteraction(AminoAcid anionicAminoAcid, AminoAcid cationicAminoAcid, double distanceBtwCentroids) {
         this.anionicAminoAcid = anionicAminoAcid;
         this.cationicAminoAcid = cationicAminoAcid;
-        this.distance = distance;
+        this.distanceBtwCentroids = distanceBtwCentroids;
     }
 
     public AminoAcid getAnionicAminoAcid() {
@@ -20,12 +22,27 @@ public class IonicInteraction {
         return cationicAminoAcid;
     }
 
-    public double getDistance() {
-        return distance;
+    public double getDistanceBtwCentroids() {
+        return distanceBtwCentroids;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        IonicInteraction that = (IonicInteraction) o;
+        return Double.compare(that.distanceBtwCentroids, distanceBtwCentroids) == 0
+                && Objects.equals(anionicAminoAcid, that.anionicAminoAcid)
+                && Objects.equals(cationicAminoAcid, that.cationicAminoAcid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(anionicAminoAcid, cationicAminoAcid, distanceBtwCentroids);
     }
 
     @Override
     public String toString() {
-        return "" + anionicAminoAcid + '\t' + cationicAminoAcid + '\t' + distance;
+        return "" + anionicAminoAcid + '\t' + cationicAminoAcid + '\t' +  MathHelper.round(distanceBtwCentroids);
     }
 }

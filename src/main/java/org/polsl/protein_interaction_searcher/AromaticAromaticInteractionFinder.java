@@ -4,43 +4,53 @@ import org.biojava.nbio.structure.Calc;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
-public class AromaticAromaticInteractionFinder {
+public final class AromaticAromaticInteractionFinder {
 
-    private PdbStructureParser pdbStructureParser;
-    private final double distThresholdMin = 4.5;
-    private final double distThresholdMax = 7;
+    private final PdbStructureParser pdbStructureParser;
 
     public AromaticAromaticInteractionFinder(PdbStructureParser pdbStructureParser) {
         this.pdbStructureParser = pdbStructureParser;
     }
 
-    public List<AromaticAromaticInteraction> findAromaticAromaticInteraction() {
+    public List<AromaticAromaticInteraction> findAromaticAromaticInteraction(AromaticAromaticInteractionCriteria criteria) {
+        final List<AromaticRing> aromaticRings = pdbStructureParser.getAromaticRings();
+        ArrayList<AromaticAromaticInteraction> foundAromaticAromaticInteractions = new ArrayList<>();
 
-        List<AromaticRing> aromaticRings = pdbStructureParser.getAromaticRings();
-        ArrayList<AromaticAromaticInteraction> foundInteractions = new ArrayList<>();
+        final int aromaticRingsLen = aromaticRings.size();
+        for (int i = 0; i < aromaticRingsLen; ++i) {
+            for (int j = i + 1; j < aromaticRingsLen; ++j) {
+                final AromaticAromaticInteraction aromaticAromaticInteraction = this.obtainAromaticAromaticInteraction(aromaticRings.get(i),
+                                                                                                                       aromaticRings.get(j),
+                                                                                                                       criteria);
 
-        ListIterator<AromaticRing> aromaticRingItr = aromaticRings.listIterator();
-
-        while (aromaticRingItr.hasNext()) {
-
-            AromaticRing aromaticRing = aromaticRingItr.next();
-            ListIterator<AromaticRing> remainingAromaticRingItr = aromaticRings.listIterator(aromaticRingItr.nextIndex());
-
-            remainingAromaticRingItr.forEachRemaining((aromaRing) -> {
-                double dist = Calc.getDistance(aromaticRing.calculateCentroid(), aromaRing.calculateCentroid());
-                double phi = getAngleBetweenRings(aromaticRing, aromaRing);
-
-                if (dist > distThresholdMin && dist < distThresholdMax) {
-                    foundInteractions.add(new AromaticAromaticInteraction(new AminoAcid(aromaticRing.getAminoAcid()), new AminoAcid(aromaRing.getAminoAcid()), dist, phi));
+                if (aromaticAromaticInteraction != null) {
+                    foundAromaticAromaticInteractions.add(aromaticAromaticInteraction);
                 }
-            });
+            }
         }
-        return foundInteractions;
+
+        return foundAromaticAromaticInteractions;
+    }
+
+    private AromaticAromaticInteraction obtainAromaticAromaticInteraction(AromaticRing firstRing, AromaticRing secondRing,
+                                                                          AromaticAromaticInteractionCriteria criteria) {
+        final double distanceBtwRings = Calc.getDistance(firstRing.getRingCentroid(), secondRing.getRingCentroid());
+        if ( ! (distanceBtwRings > criteria.getMinDistanceBtwRings() && distanceBtwRings <= criteria.getMaxDistanceBtwRings()) ) {
+            return null;
+        }
+
+        final double angleBtwRings = getAngleBetweenRings(firstRing, secondRing);
+        if ( ! (angleBtwRings >= criteria.getMinAngleBtwRings() && angleBtwRings <= criteria.getMaxAngleBtwRings()) ) {
+            return null;
+        }
+
+        return new AromaticAromaticInteraction(new AminoAcid(firstRing.getAminoAcid()),
+                                               new AminoAcid(secondRing.getAminoAcid()),
+                                               distanceBtwRings, angleBtwRings);
     }
 
     private double getAngleBetweenRings(AromaticRing firstRing, AromaticRing secondRing) {
-        return MathHelper.radiansToDegrees(firstRing.calculateNormalVector().angle(secondRing.calculateNormalVector()));
+        return MathHelper.radiansToDegrees(firstRing.getNormalVector().angle(secondRing.getNormalVector()));
     }
 }

@@ -5,45 +5,58 @@ import org.biojava.nbio.structure.Calc;
 
 import java.util.*;
 
-public class HydrophobicInteractionsFinder {
+
+public final class HydrophobicInteractionsFinder {
 
     private final PdbStructureParser pdbStructureParser;
-    private final List<AminoAcidAbbreviations> allowedAminoAcids = Arrays.asList(AminoAcidAbbreviations.GLY,
-                                                                                 AminoAcidAbbreviations.ALA,
-                                                                                 AminoAcidAbbreviations.VAL,
-                                                                                 AminoAcidAbbreviations.LEU,
-                                                                                 AminoAcidAbbreviations.ILE,
-                                                                                 AminoAcidAbbreviations.MET,
-                                                                                 AminoAcidAbbreviations.PRO,
-                                                                                 AminoAcidAbbreviations.PHE,
-                                                                                 AminoAcidAbbreviations.TRP
+    private final List<AminoAcidAbbreviations> nonPolarAminoAcids = Arrays.asList(AminoAcidAbbreviations.ALA,
+                                                                                  AminoAcidAbbreviations.CYS,
+                                                                                  AminoAcidAbbreviations.GLY,
+                                                                                  AminoAcidAbbreviations.ILE,
+                                                                                  AminoAcidAbbreviations.LEU,
+                                                                                  AminoAcidAbbreviations.MET,
+                                                                                  AminoAcidAbbreviations.PHE,
+                                                                                  AminoAcidAbbreviations.PRO,
+                                                                                  AminoAcidAbbreviations.TRP,
+                                                                                  AminoAcidAbbreviations.TYR,
+                                                                                  AminoAcidAbbreviations.VAL
         );
 
-    private final String[] desiredAtoms = new String[] {"CB"};
+    private final String[] desiredAtoms = new String[] {"CA"};
 
     public HydrophobicInteractionsFinder(PdbStructureParser pdbStructureParser) {
         this.pdbStructureParser = pdbStructureParser;
     }
 
-    List<HydrophobicInteraction> findHydrophobicInteractions() {
-        ArrayList<Atom> cbAtoms =  pdbStructureParser.getAtoms(desiredAtoms, allowedAminoAcids);
+    List<HydrophobicInteraction> findHydrophobicInteractions(HydrophobicInteractionCriteria criteria) {
+        ArrayList<Atom> CAsAtoms = pdbStructureParser.getAtoms(desiredAtoms, nonPolarAminoAcids);
+        ArrayList<HydrophobicInteraction> foundHydrophobicInteractions = new ArrayList<>();
 
-        ArrayList<HydrophobicInteraction> foundInteractions = new ArrayList<>();
+        final int CAsAtomsLen = CAsAtoms.size();
+        for (int i = 0; i < CAsAtomsLen; ++i) {
+            for (int j = i + 1; j < CAsAtomsLen; ++j) {
+                final HydrophobicInteraction hydrophobicInteraction = this.obtainHydrophobicInteraction(CAsAtoms.get(i),
+                                                                                                        CAsAtoms.get(j),
+                                                                                                        criteria);
 
-        ListIterator<Atom> atomItr = cbAtoms.listIterator();
-        while(atomItr.hasNext()) {
-            Atom atom = atomItr.next();
-
-            ListIterator<Atom> remainingAtomsIt = cbAtoms.listIterator(atomItr.nextIndex());
-
-            remainingAtomsIt.forEachRemaining((a) -> {
-                double dist = Calc.getDistance(atom, a);
-                if (dist <= 5) {
-                    foundInteractions.add(new HydrophobicInteraction(new AminoAcid(atom.getGroup()), new AminoAcid(a.getGroup()), dist));
+                if (hydrophobicInteraction != null) {
+                    foundHydrophobicInteractions.add(hydrophobicInteraction);
                 }
-            });
+            }
+        }
+        return foundHydrophobicInteractions;
+    }
+
+    private HydrophobicInteraction obtainHydrophobicInteraction(Atom firstAtom, Atom secondAtom, HydrophobicInteractionCriteria criteria) {
+        final double distCAs = Calc.getDistance(firstAtom, secondAtom);
+
+        if (distCAs > criteria.getMinDistanceCAs() && distCAs <= criteria.getMaxDistanceCAs()) {
+            return new HydrophobicInteraction(new AminoAcid(firstAtom.getGroup()),
+                                              new AminoAcid(secondAtom.getGroup()),
+                                              distCAs);
         }
 
-        return foundInteractions;
+        return null;
     }
+
 }

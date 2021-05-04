@@ -2,16 +2,16 @@ package org.polsl.protein_interaction_searcher;
 
 import java.util.Objects;
 
-public class HydrophobicInteraction {
+public final class HydrophobicInteraction {
 
     private final AminoAcid firstInteractee;
     private final AminoAcid secondInteractee;
-    private final double distance;
+    private final double distanceBtwCAs;
 
-    public HydrophobicInteraction(AminoAcid firstInteractee, AminoAcid secondInteractee, double distance) {
+    public HydrophobicInteraction(AminoAcid firstInteractee, AminoAcid secondInteractee, double distanceBtwCAs) {
         this.firstInteractee = firstInteractee;
         this.secondInteractee = secondInteractee;
-        this.distance = distance;
+        this.distanceBtwCAs = distanceBtwCAs;
     }
 
     public AminoAcid getFirstInteractee() {
@@ -22,8 +22,8 @@ public class HydrophobicInteraction {
         return secondInteractee;
     }
 
-    public double getDistance() {
-        return distance;
+    public double getDistanceBtwCAs() {
+        return distanceBtwCAs;
     }
 
     @Override
@@ -31,8 +31,8 @@ public class HydrophobicInteraction {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         HydrophobicInteraction that = (HydrophobicInteraction) o;
-        return firstInteractee.equals(that.firstInteractee) &&
-                secondInteractee.equals(that.secondInteractee);
+        return firstInteractee.equals(that.firstInteractee)
+               && secondInteractee.equals(that.secondInteractee);
     }
 
     @Override
@@ -42,6 +42,6 @@ public class HydrophobicInteraction {
 
     @Override
     public String toString() {
-        return "" + firstInteractee + '\t' + secondInteractee + '\t' + distance;
+        return "" + firstInteractee + '\t' + secondInteractee + '\t' +  MathHelper.round(distanceBtwCAs);
     }
 }

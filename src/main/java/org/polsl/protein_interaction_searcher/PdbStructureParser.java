@@ -35,7 +35,7 @@ final class PdbStructureParser {
         atoms.removeIf((a) -> {
             final String aminoAcidName = a.getGroup().getPDBName();
             final AminoAcidAbbreviations aminoAcidAbbr = AminoAcidAbbreviations.valueOf(aminoAcidName);
-            return !allowedAminoAcids.contains(aminoAcidAbbr);
+            return ( ! allowedAminoAcids.contains(aminoAcidAbbr));
         });
 
         return atoms;
@@ -43,19 +43,18 @@ final class PdbStructureParser {
 
     ArrayList<AromaticRing> getAromaticRings() {
 
-        List<Atom> phenylalanineAtoms = getAtoms(new String[]{"CG", "CD1", "CD2", "CE1", "CE2", "CZ"}, Arrays.asList(AminoAcidAbbreviations.PHE));
-        List<Atom> tyrosineAtoms = getAtoms(new String[]{"CG", "CD1", "CD2", "CE1", "CE2", "CZ"}, Arrays.asList(AminoAcidAbbreviations.TYR));
+        final List<Atom> phenylalanineAtoms = getAtoms(new String[]{"CG", "CD1", "CD2", "CE1", "CE2", "CZ"}, Arrays.asList(AminoAcidAbbreviations.PHE));
+        final List<Atom> tyrosineAtoms = getAtoms(new String[]{"CG", "CD1", "CD2", "CE1", "CE2", "CZ"}, Arrays.asList(AminoAcidAbbreviations.TYR));
 
-//        List<Atom> tryptophanPyrroleRingAtoms = getAtoms(new String[]{"CG", "CD1", "CD2", "CE1", "CE2"}, Arrays.asList(AminoAcidAbbreviations.TRP));
-        List<Atom> tryptophanPyrroleRingAtoms = getAtoms(new String[]{"CG", "CD1", "CD2", "NE1", "CE2"}, Arrays.asList(AminoAcidAbbreviations.TRP));
-        List<Atom> tryptophanBenzeneRingAtoms = getAtoms(new String[]{"CD2", "CE2", "CE3", "CZ2", "CZ3", "CH2"}, Arrays.asList(AminoAcidAbbreviations.TRP));
+        final List<Atom> tryptophanPyrroleRingAtoms = getAtoms(new String[]{"CG", "CD1", "CD2", "NE1", "CE2"}, Arrays.asList(AminoAcidAbbreviations.TRP));
+        final List<Atom> tryptophanBenzeneRingAtoms = getAtoms(new String[]{"CD2", "CE2", "CE3", "CZ2", "CZ3", "CH2"}, Arrays.asList(AminoAcidAbbreviations.TRP));
 
-        List<List<Atom>> phe = Lists.partition(phenylalanineAtoms, 6);
-        List<List<Atom>> tyr = Lists.partition(tyrosineAtoms, 6);
-        List<List<Atom>> phe_tyr = Stream.concat(phe.stream(), tyr.stream()).collect(Collectors.toList());
+        final List<List<Atom>> phe = Lists.partition(phenylalanineAtoms, 6);
+        final List<List<Atom>> tyr = Lists.partition(tyrosineAtoms, 6);
+        final List<List<Atom>> phe_tyr = Stream.concat(phe.stream(), tyr.stream()).collect(Collectors.toList());
 
-        List<List<Atom>> tryPyrrole = Lists.partition(tryptophanPyrroleRingAtoms, 5);
-        List<List<Atom>> tryBenzene = Lists.partition(tryptophanBenzeneRingAtoms, 6);
+        final List<List<Atom>> tryPyrrole = Lists.partition(tryptophanPyrroleRingAtoms, 5);
+        final List<List<Atom>> tryBenzene = Lists.partition(tryptophanBenzeneRingAtoms, 6);
 
 
         ArrayList <AromaticRing> aromaticRings = new ArrayList<>();

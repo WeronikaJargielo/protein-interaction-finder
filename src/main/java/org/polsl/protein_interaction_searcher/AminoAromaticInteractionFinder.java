@@ -5,53 +5,71 @@ import org.biojava.nbio.structure.Calc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-public class AminoAromaticInteractionFinder {
+public final class AminoAromaticInteractionFinder {
 
-    private PdbStructureParser pdbStructureParser;
+    private final class Cation {
+        public final String[] atoms;
+        public final List<AminoAcidAbbreviations> aminoAcid;
 
-    private final String[] desiredAtomsLysine = new String[] {"NZ"};
-//    private final String[] desiredAtomsArginine = new String[] {"NH1, NH2"};
-    private final String[] desiredAtomsArginine = new String[] {"CZ"};
-//    private final String[] desiredAtomsHistydine = new String[] {"ND1, NE2"};
-    private final String[] desiredAtomsHistydine = new String[] {"CE1"};
+        public Cation(String[] atoms, List<AminoAcidAbbreviations> aminoAcid) {
+            this.atoms = atoms;
+            this.aminoAcid = aminoAcid;
+        }
+    }
+
+    private final PdbStructureParser pdbStructureParser;
+
+    private final List<AminoAromaticInteractionFinder.Cation> desiredCations = Arrays.asList(new Cation(new String[] {"CZ"}, Arrays.asList(AminoAcidAbbreviations.ARG)),
+                                                                                             new Cation(new String[] {"CE1"}, Arrays.asList(AminoAcidAbbreviations.HIS)),
+                                                                                             new Cation(new String[] {"NZ"}, Arrays.asList(AminoAcidAbbreviations.LYS)));
+
 
     public AminoAromaticInteractionFinder(PdbStructureParser pdbStructureParser) {
         this.pdbStructureParser = pdbStructureParser;
     }
 
-    public List<AminoAromaticInteraction> findAminoAromaticInteractions() {
-        ArrayList<Atom> atomsLysine = pdbStructureParser.getAtoms(desiredAtomsLysine, Arrays.asList(AminoAcidAbbreviations.LYS));
-        ArrayList<Atom> atomsArginine = pdbStructureParser.getAtoms(desiredAtomsArginine, Arrays.asList(AminoAcidAbbreviations.ARG));
-        ArrayList<Atom> atomsHistydine = pdbStructureParser.getAtoms(desiredAtomsHistydine, Arrays.asList(AminoAcidAbbreviations.HIS));
-
-        List<Atom> nitrogenAtoms = Stream.of(atomsLysine, atomsArginine, atomsHistydine).flatMap(Collection::stream).collect(Collectors.toList());
-
-        ArrayList<AromaticRing> aromaticRings = pdbStructureParser.getAromaticRings();
-
-        double criticalDistFrom = 3.4;
-        double criticalDistTo = 6;
-
-        List<AminoAromaticInteraction> foundInteractions = new ArrayList<>();
-        aromaticRings.forEach((aromaticRing) -> {
-            Atom ringCentroid = aromaticRing.calculateCentroid();
-
-            nitrogenAtoms.forEach((n -> {
-                final double dist = Calc.getDistance(ringCentroid, n);
-                // TODO: Calculating the angle.
-                final double polarAngle = aromaticRing.calculatePolarAngleOfAtom(n);
-                final double equatorialAngle = aromaticRing.calculateEquatorialAngleOfAtom(n);
-                    if (dist > criticalDistFrom && dist < criticalDistTo) {
-                        foundInteractions.add(new AminoAromaticInteraction(new AminoAcid(aromaticRing.getAminoAcid()), new AminoAcid(n.getGroup()),
-                                                                           dist, polarAngle, equatorialAngle));
-
-                    }
-            }));
+    public List<AminoAromaticInteraction> findAminoAromaticInteractions(AminoAromaticInteractionCriteria criteria) {
+        List<Atom> cations = new ArrayList<>();
+        desiredCations.forEach(cation -> {
+            cations.addAll(pdbStructureParser.getAtoms(cation.atoms, cation.aminoAcid));
         });
-        return foundInteractions;
+
+        List<AminoAromaticInteraction> foundAminoAromaticInteractions = new ArrayList<>();
+
+        final ArrayList<AromaticRing> aromaticRings = pdbStructureParser.getAromaticRings();
+        aromaticRings.forEach(aromaticRing -> {
+            cations.forEach(cation -> {
+                final AminoAromaticInteraction aminoAromaticInteraction = this.obtainAminoAromaticInteraction(cation, aromaticRing, criteria);
+
+                if (aminoAromaticInteraction != null) {
+                    foundAminoAromaticInteractions.add(aminoAromaticInteraction);
+                }
+            });
+        });
+
+        return foundAminoAromaticInteractions;
+    }
+
+    private AminoAromaticInteraction obtainAminoAromaticInteraction(Atom cation, AromaticRing aromaticRing, AminoAromaticInteractionCriteria criteria) {
+        final double distanceBtwCationRing = Calc.getDistance(cation, aromaticRing.getRingCentroid());
+        if ( ! (distanceBtwCationRing > criteria.getMinDistanceBtwCationRing() && distanceBtwCationRing <= criteria.getMaxDistanceBtwCationRing())) {
+            return null;
+        }
+
+        final double polarAngle = aromaticRing.calculatePolarAngleOfAtom(cation);
+        if ( ! (polarAngle >= criteria.getMinPolarAngle() && polarAngle <= criteria.getMaxPolarAngle())) {
+            return null;
+        }
+
+        final double azimuthalAngle = aromaticRing.calculateAzimuthalAngleOfAtom(cation);
+        if ( ! (azimuthalAngle >= criteria.getMinAzimuthalAngle() && azimuthalAngle <= criteria.getMaxAzimuthalAngle())) {
+            return null;
+        }
+
+        return new AminoAromaticInteraction(new AminoAcid(aromaticRing.getAminoAcid()),
+                                            new AminoAcid(cation.getGroup()),
+                                            distanceBtwCationRing, polarAngle, azimuthalAngle);
     }
 }

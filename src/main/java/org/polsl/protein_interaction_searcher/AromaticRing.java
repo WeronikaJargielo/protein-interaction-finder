@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class AromaticRing {
+public final class AromaticRing {
     private final Atom[] atoms;
     private final Group aminoAcid;
     private final Atom ringCentroid;
@@ -21,8 +21,9 @@ public class AromaticRing {
         atoms.toArray(this.atoms);
 
         this.aminoAcid = this.atoms[0].getGroup();
-        this.ringCentroid = this.calculateCentroid();
+        this.ringCentroid = Calc.getCentroid(this.atoms);
         this.normalVector = this.calculateNormalVector();
+        this.normalVector.normalize();
     }
 
     public Atom[] getAtoms() {
@@ -33,24 +34,28 @@ public class AromaticRing {
         return aminoAcid;
     }
 
-    public Atom calculateCentroid() {
-        return Calc.getCentroid(atoms);
+    public Atom getRingCentroid() {
+        return ringCentroid;
     }
 
-    public Vector3d calculateNormalVector() {
+    public Vector3d getNormalVector() {
+        return normalVector;
+    }
+
+    private Vector3d calculateNormalVector() {
         final String atomNameForBeginVec;
         final String atomNameForEndVec;
 
         switch (AminoAcidAbbreviations.valueOf(aminoAcid.getPDBName())) {
-            case TYR:
             case PHE:
+            case TYR:
                 atomNameForBeginVec = "CD1"; atomNameForEndVec = "CG";
                 break;
             case TRP:
                 if (this.atoms.length == 5) {
-                    atomNameForBeginVec = "CD1"; atomNameForEndVec = "CG";
+                    atomNameForBeginVec = "CG"; atomNameForEndVec = "CD1";
                 } else {
-                    atomNameForBeginVec = "CE2"; atomNameForEndVec = "CD2";
+                    atomNameForBeginVec = "CE3"; atomNameForEndVec = "CD2";
                 }
                 break;
             default:
@@ -67,9 +72,20 @@ public class AromaticRing {
     }
 
     public double calculatePolarAngleOfAtom(Atom atom) {
-        final Vector3d centroidAtomVec = MathHelper.calculateVector(this.calculateCentroid(), atom);
+        final Vector3d centroidAtomVec = MathHelper.calculateVector(this.ringCentroid, atom);
 
         return MathHelper.radiansToDegrees(this.normalVector.angle(centroidAtomVec));
+    }
+
+    public double calculateAzimuthalAngleOfAtom(Atom atom) {
+        double azimuthalAngle = this.calculateEquatorialAngleOfAtom(atom);
+
+        final AminoAcidAbbreviations aminoAcidAbbr = AminoAcidAbbreviations.valueOf(aminoAcid.getPDBName());
+        if (aminoAcidAbbr == AminoAcidAbbreviations.PHE || aminoAcidAbbr == AminoAcidAbbreviations.TYR) {
+            azimuthalAngle = (azimuthalAngle >= 180.0) ? azimuthalAngle - 180.0 : azimuthalAngle + 180.0;
+        }
+
+        return azimuthalAngle;
     }
 
     public double calculateElevationAngleOfAtom(Atom atom) {
@@ -79,10 +95,11 @@ public class AromaticRing {
     public double calculateEquatorialAngleOfAtom(Atom atom) {
         final Vector3d centroidToRingAtomVec = MathHelper.calculateVector(this.ringCentroid, this.getRingAtomForEquatorialAngle());
         final Point3d atomProjection = this.calculateAtomProjectionOnRing(atom);
-        final Vector3d centroidAtomProjectionVec = MathHelper.calculateVector(this.ringCentroid.getCoordsAsPoint3d(), atomProjection);
+        final Vector3d centroidToAtomProjectionVec = MathHelper.calculateVector(this.ringCentroid.getCoordsAsPoint3d(), atomProjection);
 
-        final double cosine = (centroidToRingAtomVec.dot(centroidAtomProjectionVec)) / (centroidToRingAtomVec.length()*centroidAtomProjectionVec.length());
-        final double sine = MathHelper.calculateCrossProduct(this.normalVector, centroidToRingAtomVec).dot(centroidAtomProjectionVec) / (centroidToRingAtomVec.length()*centroidAtomProjectionVec.length());
+        final double cosine = (centroidToRingAtomVec.dot(centroidToAtomProjectionVec)) / (centroidToRingAtomVec.length()*centroidToAtomProjectionVec.length());
+        final double sine = MathHelper.calculateCrossProduct(this.normalVector, centroidToRingAtomVec)
+                                      .dot(centroidToAtomProjectionVec) / (centroidToRingAtomVec.length()*centroidToAtomProjectionVec.length());
 
         final double equatorialAngle;
         if (sine >= 0) {
@@ -110,17 +127,17 @@ public class AromaticRing {
         final String desiredAtom;
 
         switch (AminoAcidAbbreviations.valueOf(aminoAcid.getPDBName())) {
-            case TYR:
             case PHE:
+            case TYR:
                 desiredAtom = "CZ";
                 break;
             case TRP:
-                desiredAtom = this.atoms.length == 5 ? "NE1" : "CZ2";
+                desiredAtom = (this.atoms.length == 5) ? "NE1" : "CZ2";
                 break;
             default:
                 return null;
         }
-       return findAtomInRingAtoms(desiredAtom);
+        return this.findAtomInRingAtoms(desiredAtom);
     }
 
     private Atom findAtomInRingAtoms(String pdbAtomName) {

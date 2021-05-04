@@ -6,17 +6,15 @@ import org.biojava.nbio.structure.Calc;
 
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-final public class HydrogenBondFinder {
+public final class HydrogenBondFinder {
 
     // Inner class representing donors and acceptors which create hydrogen bond.
     final private class BondParticipant {
-        final public String[] atoms;
-        final public AminoAcidAbbreviations aminoAcid;
-        final public Function<BondParticipant, List<Atom>> bondParticipantFilter;
-        final public Boolean specialTreatment;
+        public final String[] atoms;
+        public final AminoAcidAbbreviations aminoAcid;
+        public final Function<BondParticipant, List<Atom>> bondParticipantFilter;
+        public final Boolean specialTreatment;
 
         public BondParticipant(String[] atoms, AminoAcidAbbreviations aminoAcid) {
             this.atoms = atoms;
@@ -148,11 +146,13 @@ final public class HydrogenBondFinder {
                                                                                        new BondParticipant(new String[]{"OE1", "CD"}, AminoAcidAbbreviations.GLU),
                                                                                        new BondParticipant(new String[]{"OE2", "CD"}, AminoAcidAbbreviations.GLU),
 
+                                                                                       // TODO
                                                                                        new BondParticipant(new String[]{"ND1", "CG", "CE1"}, AminoAcidAbbreviations.HIS, acceptorHistidineFilter),
+//                                                                                       new BondParticipant(new String[]{"ND1", "CG"}, AminoAcidAbbreviations.HIS, acceptorHistidineFilter),
                                                                                        new BondParticipant(new String[]{"NE2", "CD2", "CE1"}, AminoAcidAbbreviations.HIS, acceptorHistidineFilter),
+//                                                                                       new BondParticipant(new String[]{"NE2", "CD2"}, AminoAcidAbbreviations.HIS, acceptorHistidineFilter),
 
                                                                                        new BondParticipant(new String[]{"SD", "CG"}, AminoAcidAbbreviations.MET),
-                                                                                       new BondParticipant(new String[]{"SD", "CE"}, AminoAcidAbbreviations.MET),
 
                                                                                        new BondParticipant(new String[]{"OG", "CB"}, AminoAcidAbbreviations.SER),
 
@@ -200,6 +200,8 @@ final public class HydrogenBondFinder {
         final int indA = 0, indD = 0;
         final int indAa = 1, indH = 1;
 
+        // TODO check if acceptor != donor
+        // TODO add relaxed and strict versino of rules
         final double distHA = Calc.getDistance(donor.get(indH), acceptor.get(indA));
         final double distDA = Calc.getDistance(donor.get(indD), acceptor.get(indA));
 
@@ -209,7 +211,7 @@ final public class HydrogenBondFinder {
 
 //        if (!(distDA < 3.9 && distHA < 2.5 && angleHAAa > 90 && angleDAAa > 90 && angleDHA > 90)) { // my criterions
         if (!(distDA < 3.9 && distHA < 2.5 && angleDHA > 90)) { // my criterions
-//        if (!(distDA <= 3.5)) { // PIC criterion
+////        if (!(distDA <= 3.5)) { // PIC criterion
             return null;
         }
 
