@@ -1,6 +1,7 @@
 package org.polsl.protein_interaction_searcher;
 
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.io.PDBBioAssemblyParser;
 
 import java.io.IOException;
 import java.util.List;

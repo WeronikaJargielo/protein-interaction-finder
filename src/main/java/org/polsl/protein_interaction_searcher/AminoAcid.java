@@ -4,10 +4,10 @@ import org.biojava.nbio.structure.Group;
 
 import java.util.Objects;
 
-public class AminoAcid {
-    private int position;
-    private AminoAcidAbbreviations abbreviation;
-    private String chain;
+public final class AminoAcid {
+    private final int position;
+    private final AminoAcidAbbreviations abbreviation;
+    private final String chain;
 
     public AminoAcid(int position, AminoAcidAbbreviations abbreviation, String chain) {
         this.position = position;

@@ -30,7 +30,7 @@ final class PdbStructureParser {
     }
 
     ArrayList<Atom> getAtoms(String[] atomNames, List<AminoAcidAbbreviations> allowedAminoAcids) {
-        ArrayList<Atom> atoms = new ArrayList<>(Arrays.asList(StructureTools.getAtomArray(proteinStructure, atomNames)));
+        ArrayList<Atom> atoms = this.getAtoms(atomNames);
 
         atoms.removeIf((a) -> {
             final String aminoAcidName = a.getGroup().getPDBName();
@@ -49,28 +49,22 @@ final class PdbStructureParser {
         final List<Atom> tryptophanPyrroleRingAtoms = getAtoms(new String[]{"CG", "CD1", "CD2", "NE1", "CE2"}, Arrays.asList(AminoAcidAbbreviations.TRP));
         final List<Atom> tryptophanBenzeneRingAtoms = getAtoms(new String[]{"CD2", "CE2", "CE3", "CZ2", "CZ3", "CH2"}, Arrays.asList(AminoAcidAbbreviations.TRP));
 
-        final List<List<Atom>> phe = Lists.partition(phenylalanineAtoms, 6);
-        final List<List<Atom>> tyr = Lists.partition(tyrosineAtoms, 6);
-        final List<List<Atom>> phe_tyr = Stream.concat(phe.stream(), tyr.stream()).collect(Collectors.toList());
+        final int pyrroleRingLen = 5;
+        final int benzeneRingLen = 6;
 
-        final List<List<Atom>> tryPyrrole = Lists.partition(tryptophanPyrroleRingAtoms, 5);
-        final List<List<Atom>> tryBenzene = Lists.partition(tryptophanBenzeneRingAtoms, 6);
+        final List<List<Atom>> phes = Lists.partition(phenylalanineAtoms, benzeneRingLen);
+        final List<List<Atom>> tyrs = Lists.partition(tyrosineAtoms, benzeneRingLen);
+        final List<List<Atom>> phesAndTyrs = Stream.concat(phes.stream(), tyrs.stream()).collect(Collectors.toList());
 
+        final List<List<Atom>> tryPyrroles = Lists.partition(tryptophanPyrroleRingAtoms, pyrroleRingLen);
+        final List<List<Atom>> tryBenzenes = Lists.partition(tryptophanBenzeneRingAtoms, benzeneRingLen);
 
         ArrayList <AromaticRing> aromaticRings = new ArrayList<>();
 
-        for (List<Atom> aromaticRingAtoms : phe_tyr) {
-            aromaticRings.add(new AromaticRing(aromaticRingAtoms));
-        }
+        phesAndTyrs.forEach(aromaticRingAtoms -> aromaticRings.add(new AromaticRing(aromaticRingAtoms)));
+        tryPyrroles.forEach(aromaticRingAtoms -> aromaticRings.add(new AromaticRing(aromaticRingAtoms)));
+        tryBenzenes.forEach(aromaticRingAtoms -> aromaticRings.add(new AromaticRing(aromaticRingAtoms)));
 
-        for (List<Atom> aromaticRingAtoms : tryPyrrole) {
-            aromaticRings.add(new AromaticRing(aromaticRingAtoms));
-        }
-
-        for (List<Atom> aromaticRingAtoms : tryBenzene) {
-            aromaticRings.add(new AromaticRing(aromaticRingAtoms));
-        }
-        
         return aromaticRings;
     }
 

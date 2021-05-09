@@ -5,6 +5,7 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class DisulphideBridgesFinder {
     private final PdbStructureParser pdbStructureParser;
@@ -37,10 +38,43 @@ public class DisulphideBridgesFinder {
     }
 
     private DisulphideBridge obtainDisulphideBridge(List<Atom> firstCys, List<Atom> secondCys, DisulphideBridgeCriteria criteria) {
-        final int indN = 0;
-        final int indCA = 1;
-        final int indCB = 2;
-        final int indSG = 3;
+        final int indN = IntStream.range(0, firstCys.size())
+                                  .filter(i -> "N".equals(firstCys.get(i).getName()))
+                                  .findFirst()
+                                  .orElse(-1);
+        final int indCA = IntStream.range(0, firstCys.size())
+                                   .filter(i -> "CA".equals(firstCys.get(i).getName()))
+                                   .findFirst()
+                                   .orElse(-1);
+        final int indCB = IntStream.range(0, firstCys.size())
+                                   .filter(i -> "CB".equals(firstCys.get(i).getName()))
+                                   .findFirst()
+                                   .orElse(-1);
+        final int indSG = IntStream.range(0, firstCys.size())
+                                   .filter(i -> "SG".equals(firstCys.get(i).getName()))
+                                   .findFirst()
+                                   .orElse(-1);
+        System.out.println(indN);
+        System.out.println(indCA);
+        System.out.println(indCB);
+        System.out.println(indSG);
+
+//      TODO: Sanity check - remove after development.
+        if ( ! (firstCys.get(indN).getName().equals("N") || secondCys.get(indN).getName().equals("N")) ) {
+            System.exit(-1);
+        }
+
+        if ( ! (firstCys.get(indCA).getName().equals("CA") || secondCys.get(indCA).getName().equals("CA")) ) {
+            System.exit(-1);
+        }
+
+        if ( ! (firstCys.get(indCB).getName().equals("CB") || secondCys.get(indCB).getName().equals("CB")) ){
+            System.exit(-1);
+        }
+
+        if ( ! (firstCys.get(indSG).getName().equals("SG") || secondCys.get(indSG).getName().equals("SG")) ) {
+            System.exit(-1);
+        }
 
         final double distanceBtwCAs = Calc.getDistance(firstCys.get(indCA), secondCys.get(indCA));
         final double distanceBtwCBs = Calc.getDistance(firstCys.get(indCB), secondCys.get(indCB));

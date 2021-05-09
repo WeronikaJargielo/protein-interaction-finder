@@ -14,7 +14,7 @@ public final class HydrogenBondFinder {
         public final String[] atoms;
         public final AminoAcidAbbreviations aminoAcid;
         public final Function<BondParticipant, List<Atom>> bondParticipantFilter;
-        public final Boolean specialTreatment;
+        public final  Boolean specialTreatment;
 
         public BondParticipant(String[] atoms, AminoAcidAbbreviations aminoAcid) {
             this.atoms = atoms;
@@ -32,7 +32,7 @@ public final class HydrogenBondFinder {
 
     }
 
-    final private int bondParticipantSize = 2;
+    private final int bondParticipantSize = 2;
     private PdbStructureParser pdbStructureParser;
 
     public HydrogenBondFinder(PdbStructureParser pdbStructureParser) {
@@ -43,52 +43,45 @@ public final class HydrogenBondFinder {
 //  1. On uncharged HIS the H atom may be located on either HIS ND1 or HIS NE2, so in this situation one nitrogen may only donate a proton,
 //     in a hydrogen bond while the other nitrogen can only accept one.
 //  2. Additionally, HIS could be charged with a hydrogen on each nitrogen, allowing both only to donate.
-//  The important message here is that A single histidine side-chain nitrogen cannot simultaneously accept and donate a hydrogen bond.
-    final private Function<BondParticipant, List<Atom>> acceptorHistidineFilter = (bondParticipant -> {
+//  The important message here is that a single histidine side-chain nitrogen cannot simultaneously accept and donate a hydrogen bond.
+    private final Function<BondParticipant, List<Atom>> acceptorHistidineFilter = (bondParticipant -> {
         List<Atom> histidineAcceptorsAtoms = new ArrayList<>();
         final String[] desiredAtomsPdbNames = bondParticipant.atoms;
         final List<AminoAcidAbbreviations> desiredAbbreviations = Arrays.asList(bondParticipant.aminoAcid);
 
-        final List<Atom> foundNandCsAtoms = pdbStructureParser.getAtoms(desiredAtomsPdbNames, desiredAbbreviations);
-        if (foundNandCsAtoms.isEmpty()) { return histidineAcceptorsAtoms; }
+        final List<Atom> foundAtoms = pdbStructureParser.getAtoms(desiredAtomsPdbNames, desiredAbbreviations);
+        if (foundAtoms.isEmpty()) { return histidineAcceptorsAtoms; }
 
-//      Assuming list in order: N, C, C.
-        final List<List<Atom>> NCCTriplets = Lists.partition(foundNandCsAtoms, desiredAtomsPdbNames.length);
+        final List<List<Atom>> dublets = Lists.partition(foundAtoms, desiredAtomsPdbNames.length);
 
-        final int indN = 0;
+        final int indN = (foundAtoms.get(0).getName().charAt(0) == ('N')) ? 0 : 1;
         String HPdbName = desiredAtomsPdbNames[indN];
         HPdbName.replace("N", "H");
 
         final List<Atom> foundHs = pdbStructureParser.getAtoms(new String[] {HPdbName}, desiredAbbreviations);
 
-        NCCTriplets.forEach(triplet -> {
-            final Integer tripletSeqNum = triplet.get(indN).getGroup().getResidueNumber().getSeqNum();
-            final String tripletChain = triplet.get(indN).getGroup().getChain().getName();
+        dublets.forEach(dublet -> {
+//          TODO: Sanity check - remove after development.
+            if (dublet.get(indN).getName().charAt(0) != ('N')) {
+                System.exit(-1);
+            }
+
+            final Integer dubletSeqNum = dublet.get(indN).getGroup().getResidueNumber().getSeqNum();
+            final String dubletChain = dublet.get(indN).getGroup().getChain().getName();
 
             final Optional<Atom> matchingH = foundHs.stream()
-                                                    .filter(H -> tripletSeqNum.equals(H.getGroup().getResidueNumber().getSeqNum())
-                                                                 && tripletChain.equals(H.getGroup().getChain().getName()))
+                                                    .filter(H -> dubletSeqNum.equals(H.getGroup().getResidueNumber().getSeqNum())
+                                                                 && dubletChain.equals(H.getGroup().getChain().getName()))
                                                     .findAny();
 
             if (matchingH.isEmpty()) {
-                histidineAcceptorsAtoms.addAll(this.getHistidineAcceptorsPairs(foundNandCsAtoms));
+                histidineAcceptorsAtoms.addAll(foundAtoms);
             }
         });
 
         return histidineAcceptorsAtoms;
     });
 
-    private List<Atom> getHistidineAcceptorsPairs(List<Atom> atoms) {
-//      Assuming list in order: N, C, C.
-        final int indN = 0;
-        List<Atom> histidineAcceptorsPairs = new ArrayList<>();
-
-        for (int indC = indN + 1; indC < atoms.size(); ++indC){
-            histidineAcceptorsPairs.add(atoms.get(indN));
-            histidineAcceptorsPairs.add(atoms.get(indC));
-        }
-        return histidineAcceptorsPairs;
-    }
 
     final private List<BondParticipant> donorsDesiredAtomsMainChain = Arrays.asList(  new BondParticipant(new String[]{"N", "H"}, null),
 //                                                                                    For amino acids at the N-terminus of protein's chain.
@@ -146,11 +139,8 @@ public final class HydrogenBondFinder {
                                                                                        new BondParticipant(new String[]{"OE1", "CD"}, AminoAcidAbbreviations.GLU),
                                                                                        new BondParticipant(new String[]{"OE2", "CD"}, AminoAcidAbbreviations.GLU),
 
-                                                                                       // TODO
-                                                                                       new BondParticipant(new String[]{"ND1", "CG", "CE1"}, AminoAcidAbbreviations.HIS, acceptorHistidineFilter),
-//                                                                                       new BondParticipant(new String[]{"ND1", "CG"}, AminoAcidAbbreviations.HIS, acceptorHistidineFilter),
-                                                                                       new BondParticipant(new String[]{"NE2", "CD2", "CE1"}, AminoAcidAbbreviations.HIS, acceptorHistidineFilter),
-//                                                                                       new BondParticipant(new String[]{"NE2", "CD2"}, AminoAcidAbbreviations.HIS, acceptorHistidineFilter),
+                                                                                       new BondParticipant(new String[]{"ND1", "CG"}, AminoAcidAbbreviations.HIS, acceptorHistidineFilter),
+                                                                                       new BondParticipant(new String[]{"NE2", "CD2"}, AminoAcidAbbreviations.HIS, acceptorHistidineFilter),
 
                                                                                        new BondParticipant(new String[]{"SD", "CG"}, AminoAcidAbbreviations.MET),
 
@@ -196,37 +186,60 @@ public final class HydrogenBondFinder {
         return Lists.partition(acceptorsSideChain, bondParticipantSize);
     }
 
-    private HydrogenBond obtainHydrogenBond(List<Atom> donor, List<Atom> acceptor) {
-        final int indA = 0, indD = 0;
-        final int indAa = 1, indH = 1;
+    public enum TypeOfHydrogenBond {
+        MC_MC,  // Main Chain - Main Chain
+        MC_SC,  // Main Chain - Side Chain
+        SC_SC,  // Side Chain - Side Chain
+    }
 
-        // TODO check if acceptor != donor
-        // TODO add relaxed and strict versino of rules
-        final double distHA = Calc.getDistance(donor.get(indH), acceptor.get(indA));
-        final double distDA = Calc.getDistance(donor.get(indD), acceptor.get(indA));
+    private HydrogenBond obtainHydrogenBond(List<Atom> donor, List<Atom> acceptor, TypeOfHydrogenBond typeOfHydrogenBond ) {
+        final int indD = (donor.get(0).getName().charAt(0) == ('H')) ? 1 : 0;
+        final int indH = (donor.get(0).getName().charAt(0) == ('H')) ? 0 : 1;
 
+        final int indA = (acceptor.get(0).getName().charAt(0) == ('C')) ? 1 : 0;
+        final int indAa = (acceptor.get(0).getName().charAt(0) == ('C')) ? 0 : 1;
+
+//      Checking if donor atom is not equal to acceptor atom, to eliminate cases when one atom can be donor and acceptor at the same time.
+        if ( (donor.get(indD).getPDBserial() == acceptor.get(indA).getPDBserial())
+              && (donor.get(indD).getGroup().getChainId().equals(acceptor.get(indA).getGroup().getChainId())) ) {
+            return null;
+        }
+
+        final double distanceHA = Calc.getDistance(donor.get(indH), acceptor.get(indA));
+        final double distanceDA = Calc.getDistance(donor.get(indD), acceptor.get(indA));
         final double angleDHA = MathHelper.angle(donor.get(indD), donor.get(indH), acceptor.get(indA));
         final double angleHAAa = MathHelper.angle(donor.get(indH), acceptor.get(indA), acceptor.get(indAa));
         final double angleDAAa = MathHelper.angle(donor.get(indD), acceptor.get(indA), acceptor.get(indAa));
 
-//        if (!(distDA < 3.9 && distHA < 2.5 && angleHAAa > 90 && angleDAAa > 90 && angleDHA > 90)) { // my criterions
-        if (!(distDA < 3.9 && distHA < 2.5 && angleDHA > 90)) { // my criterions
-////        if (!(distDA <= 3.5)) { // PIC criterion
-            return null;
+
+        switch (typeOfHydrogenBond) {
+            case MC_MC:
+                if ( ! (distanceDA < 3.9 && distanceHA < 2.5 && angleDHA > 90 && angleHAAa > 90 && angleDAAa > 90) ) {
+                   return null;
+                }
+                break;
+            case MC_SC:
+            case SC_SC:
+                if ( ! (distanceDA < 3.9 && distanceHA < 2.5 &&  angleDHA > 90) ) {
+                   return null;
+                }
+                break;
+            default:
+                return null;
         }
 
         return new HydrogenBond(new AminoAcid(donor.get(indD).getGroup()), new AminoAcid(acceptor.get(indA).getGroup()),
                                 donor.get(indD), donor.get(indH), acceptor.get(indA), acceptor.get(indAa),
-                                distHA, distDA, angleDHA, angleHAAa, angleDAAa);
+                                distanceHA, distanceDA, angleDHA, angleHAAa, angleDAAa);
     }
 
 
-    private List<HydrogenBond> findHydrogenBonds(List<List<Atom>> donors, List<List<Atom>> acceptors) {
+    private List<HydrogenBond> findHydrogenBonds(List<List<Atom>> donors, List<List<Atom>> acceptors, TypeOfHydrogenBond typeOfHydrogenBond) {
         List<HydrogenBond> foundHydrogenBonds = new ArrayList<>();
 
         donors.forEach(donor -> {
             acceptors.forEach(acceptor -> {
-                final HydrogenBond hydrogenBond = this.obtainHydrogenBond(donor, acceptor);
+                final HydrogenBond hydrogenBond = this.obtainHydrogenBond(donor, acceptor, typeOfHydrogenBond);
 
                 if (hydrogenBond != null) {
                     foundHydrogenBonds.add(hydrogenBond);
@@ -240,18 +253,18 @@ public final class HydrogenBondFinder {
        final List<List<Atom>> donors = this.getDonorsMainChain();
        final List<List<Atom>> acceptors = this.getAcceptorsMainChain();
 
-        return this.findHydrogenBonds(donors, acceptors);
+        return this.findHydrogenBonds(donors, acceptors, TypeOfHydrogenBond.MC_MC);
     }
 
     public List<HydrogenBond> findMainSideHydrogenBonds() {
-        List<List<Atom>> donorsMainChain = this.getDonorsMainChain();
-        List<List<Atom>> donorsSideChain = this.getDonorsSideChain();
+        final List<List<Atom>> donorsMainChain = this.getDonorsMainChain();
+        final List<List<Atom>> donorsSideChain = this.getDonorsSideChain();
 
-        List<List<Atom>> acceptorsMainChain = this.getAcceptorsMainChain();
-        List<List<Atom>> acceptorsSideChain = this.getAcceptorsSideChain();
+        final List<List<Atom>> acceptorsMainChain = this.getAcceptorsMainChain();
+        final List<List<Atom>> acceptorsSideChain = this.getAcceptorsSideChain();
 
-        List<HydrogenBond> foundMainSideHydrogenBonds = this.findHydrogenBonds(donorsMainChain, acceptorsSideChain);
-        foundMainSideHydrogenBonds.addAll(this.findHydrogenBonds(donorsSideChain, acceptorsMainChain));
+        List<HydrogenBond> foundMainSideHydrogenBonds = this.findHydrogenBonds(donorsMainChain, acceptorsSideChain, TypeOfHydrogenBond.MC_SC);
+        foundMainSideHydrogenBonds.addAll(this.findHydrogenBonds(donorsSideChain, acceptorsMainChain, TypeOfHydrogenBond.MC_SC));
 
         return foundMainSideHydrogenBonds;
     }
@@ -260,7 +273,7 @@ public final class HydrogenBondFinder {
         final List<List<Atom>> donors = this.getDonorsSideChain();
         final List<List<Atom>> acceptors = this.getAcceptorsSideChain();
 
-        return this.findHydrogenBonds(donors, acceptors);
+        return this.findHydrogenBonds(donors, acceptors, TypeOfHydrogenBond.SC_SC);
     }
 
 }

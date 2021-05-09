@@ -38,7 +38,9 @@ public final class MathHelper {
         final Vector3d secondFirstVec = calculateVector(secondAtom, firstAtom);
         final Vector3d secondThirdVec = calculateVector(secondAtom, thirdAtom);
 
-        return radiansToDegrees(secondFirstVec.angle(secondThirdVec));
+        return radiansToDegrees( Math.acos((secondFirstVec.x*secondThirdVec.x +
+                                            secondFirstVec.y*secondThirdVec.y +
+                                            secondFirstVec.z*secondThirdVec.z) / (secondFirstVec.length() * secondThirdVec.length())) );
     }
 
 

@@ -93,19 +93,19 @@ public enum AminoAcidAbbreviations {
      */
     VAL,
     /**
-     * Aspartic acid or Asparagine ?
+     * Aspartic acid or Asparagine
      */
     ASX,
     /**
-     * Glutamic acid or Glutamine ?
+     * Glutamic acid or Glutamine
      */
     GLX,
     /**
-     * Any amino acid ?
+     * Any amino acid
      */
     XAA,
     /**
-     * Leucine or Isoleucine ?
+     * Leucine or Isoleucine
      */
     XLE
 }
