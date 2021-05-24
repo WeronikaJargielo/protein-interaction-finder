@@ -54,10 +54,6 @@ public class DisulphideBridgesFinder {
                                    .filter(i -> "SG".equals(firstCys.get(i).getName()))
                                    .findFirst()
                                    .orElse(-1);
-        System.out.println(indN);
-        System.out.println(indCA);
-        System.out.println(indCB);
-        System.out.println(indSG);
 
 //      TODO: Sanity check - remove after development.
         if ( ! (firstCys.get(indN).getName().equals("N") || secondCys.get(indN).getName().equals("N")) ) {

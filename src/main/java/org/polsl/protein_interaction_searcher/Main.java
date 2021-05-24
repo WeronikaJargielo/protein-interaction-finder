@@ -3,12 +3,12 @@ package org.polsl.protein_interaction_searcher;
 public class Main {
     public static void main(String[] args) {
 //        String filename = "C:\\Users\\user\\Desktop\\Studia\\Semestr_9\\mgr\\ProteinInteractionSearcher\\src\\proteins\\7jgy.pdb";
-//        String filename = "C:\\Users\\user\\Desktop\\Studia\\Semestr_9\\mgr\\ProteinInteractionSearcher\\src\\proteins\\2bi6.pdb";
+        String filename = "C:\\Users\\user\\Desktop\\Studia\\Semestr_9\\mgr\\ProteinInteractionSearcher\\src\\proteins\\2bi6.pdb";
+//        String filename = "C:\\Users\\user\\Desktop\\Studia\\Semestr_9\\mgr\\ProteinInteractionSearcher\\src\\proteins\\6v5d.pdb";  // with histidines
 //        String filename = "C:\\Users\\user\\Desktop\\Studia\\Semestr_9\\mgr\\ProteinInteractionSearcher\\src\\proteins\\6vga.pdb";
 //        String filename = "C:\\Users\\user\\Desktop\\Studia\\Semestr_9\\mgr\\ProteinInteractionSearcher\\src\\proteins\\6hpj.pdb";
 //        String filename = "C:\\Users\\user\\Desktop\\Studia\\Semestr_9\\mgr\\ProteinInteractionSearcher\\src\\proteins\\6ujv.pdb";
-//        String filename = "C:\\Users\\user\\Desktop\\Studia\\Semestr_9\\mgr\\ProteinInteractionSearcher\\src\\proteins\\6v5d.pdb";  // with histidines
-        String filename = "C:\\Users\\user\\Desktop\\Studia\\Semestr_9\\mgr\\ProteinInteractionSearcher\\src\\proteins\\7kr0.pdb";  // Xray
+//        String filename = "C:\\Users\\user\\Desktop\\Studia\\Semestr_9\\mgr\\ProteinInteractionSearcher\\src\\proteins\\7kr0.pdb";  // Xray
         try {
             ProteinInteractionSearcher searcher = new ProteinInteractionSearcher(filename);
 
@@ -18,7 +18,9 @@ public class Main {
             System.out.println("Ionic interactions found:\nPosition Residue Chain Position Residue Chain DistanceBtwCentroidsOfChargedGroups");
             for (Object interaction : searcher.findIonicInteractions()) { System.out.println(interaction); }
 
+//            DisulphideBridgeCriteria disulphideBridgeCriteria = new DisulphideBridgeCriteria(0, 2.2, 0, 360, 0, 360, 0, 360, 0, 360, 0, 360);
             System.out.println("\nDisulphide bridges found:\nPosition Residue Chain Position Residue Chain DistanceBtwCAs DistanceBtwCBs DistanceBtwSS AbsDihAngleSS AbsDihAngle11 AbsDihAngle21");
+//            for (Object bridge : searcher.findDisulphideBridges(disulphideBridgeCriteria)) { System.out.println(bridge); }
             for (Object bridge : searcher.findDisulphideBridges()) { System.out.println(bridge); }
 
             System.out.println("\nSulphur-Aromatic interactions found:\nPosition Residue Chain Position Residue Chain DistanceBtwRingSulphur ElevationAngle EquatorialAngle");

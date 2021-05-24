@@ -64,7 +64,9 @@ public final class AminoAromaticInteractionFinder {
 
     private final List<AminoAromaticInteractionFinder.Cation> desiredCations = Arrays.asList(new Cation(new String[] {"CZ"}, Arrays.asList(AminoAcidAbbreviations.ARG)),
                                                                                              new Cation(new String[] {"CE1"}, Arrays.asList(AminoAcidAbbreviations.HIS), getHisAtomsIfIsChargedFilter),
-                                                                                             new Cation(new String[] {"NZ"}, Arrays.asList(AminoAcidAbbreviations.LYS)));
+                                                                                             new Cation(new String[] {"NZ"}, Arrays.asList(AminoAcidAbbreviations.LYS)),
+                                                                                             new Cation(new String[] {"ND2"}, Arrays.asList(AminoAcidAbbreviations.ASN)),
+                                                                                             new Cation(new String[] {"NE2"}, Arrays.asList(AminoAcidAbbreviations.GLN)));
 
 
 
@@ -96,7 +98,7 @@ public final class AminoAromaticInteractionFinder {
 
     private AminoAromaticInteraction obtainAminoAromaticInteraction(Atom cation, AromaticRing aromaticRing, AminoAromaticInteractionCriteria criteria) {
         final double distanceBtwCationRing = Calc.getDistance(cation, aromaticRing.getRingCentroid());
-        if ( ! (distanceBtwCationRing > criteria.getMinDistanceBtwCationRing() && distanceBtwCationRing <= criteria.getMaxDistanceBtwCationRing())) {
+        if ( ! (distanceBtwCationRing >= criteria.getMinDistanceBtwCationRing() && distanceBtwCationRing <= criteria.getMaxDistanceBtwCationRing())) {
             return null;
         }
 

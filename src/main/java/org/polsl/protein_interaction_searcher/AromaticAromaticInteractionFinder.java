@@ -41,7 +41,7 @@ public final class AromaticAromaticInteractionFinder {
         }
 
         final double angleBtwRings = getAngleBetweenRings(firstRing, secondRing);
-        if ( ! (angleBtwRings >= criteria.getMinAngleBtwRings() && angleBtwRings <= criteria.getMaxAngleBtwRings()) ) {
+        if ( ! (angleBtwRings > criteria.getMinAngleBtwRings() && angleBtwRings < criteria.getMaxAngleBtwRings()) ) {
             return null;
         }
 
