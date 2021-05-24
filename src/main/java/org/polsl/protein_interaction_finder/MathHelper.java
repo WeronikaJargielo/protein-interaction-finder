@@ -1,4 +1,4 @@
-package org.polsl.protein_interaction_searcher;
+package org.polsl.protein_interaction_finder;
 
 import org.biojava.nbio.structure.Atom;
 

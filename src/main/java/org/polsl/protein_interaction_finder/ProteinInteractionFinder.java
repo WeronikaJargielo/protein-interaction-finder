@@ -1,15 +1,14 @@
-package org.polsl.protein_interaction_searcher;
+package org.polsl.protein_interaction_finder;
 
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.io.PDBBioAssemblyParser;
 
 import java.io.IOException;
 import java.util.List;
 
-public final class ProteinInteractionSearcher {
+public final class ProteinInteractionFinder {
     private final PdbStructureParser pdbStructureParser;
 
-    public ProteinInteractionSearcher(String pdbFilename) throws IOException, StructureException {
+    public ProteinInteractionFinder(String pdbFilename) throws IOException, StructureException {
         pdbStructureParser = new PdbStructureParser(pdbFilename);
     }
 

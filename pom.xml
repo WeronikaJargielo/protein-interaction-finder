@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.polsl</groupId>
-    <artifactId>protein-interaction-searcher</artifactId>
+    <artifactId>protein-interaction-finder</artifactId>
     <version>1.0-alpha</version>
 
     <properties>
