@@ -152,6 +152,33 @@ public final class HydrogenBondFinder {
 
 
 
+    public List<HydrogenBond> findMainMainHydrogenBonds(HydrogenBondCriteria criteria) {
+        final List<List<Atom>> donors = this.getDonorsMainChain();
+        final List<List<Atom>> acceptors = this.getAcceptorsMainChain();
+
+        return this.findHydrogenBonds(donors, acceptors, criteria);
+    }
+
+    public List<HydrogenBond> findMainSideHydrogenBonds(HydrogenBondCriteria criteria) {
+        final List<List<Atom>> donorsMainChain = this.getDonorsMainChain();
+        final List<List<Atom>> donorsSideChain = this.getDonorsSideChain();
+
+        final List<List<Atom>> acceptorsMainChain = this.getAcceptorsMainChain();
+        final List<List<Atom>> acceptorsSideChain = this.getAcceptorsSideChain();
+
+        List<HydrogenBond> foundMainSideHydrogenBonds = this.findHydrogenBonds(donorsMainChain, acceptorsSideChain, criteria);
+        foundMainSideHydrogenBonds.addAll(this.findHydrogenBonds(donorsSideChain, acceptorsMainChain, criteria));
+
+        return foundMainSideHydrogenBonds;
+    }
+
+    public List<HydrogenBond> findSideSideHydrogenBonds(HydrogenBondCriteria criteria) {
+        final List<List<Atom>> donors = this.getDonorsSideChain();
+        final List<List<Atom>> acceptors = this.getAcceptorsSideChain();
+
+        return this.findHydrogenBonds(donors, acceptors, criteria);
+    }
+
     private List<List<Atom>> getDonorsMainChain() {
         List<Atom> donorsMainChain = new ArrayList<>();
         donorsDesiredAtomsMainChain.forEach(bondParticipant -> donorsMainChain.addAll(pdbStructureParser.getAtoms(bondParticipant.atoms)));
@@ -186,13 +213,7 @@ public final class HydrogenBondFinder {
         return Lists.partition(acceptorsSideChain, bondParticipantSize);
     }
 
-    public enum TypeOfHydrogenBond {
-        MC_MC,  // Main Chain - Main Chain
-        MC_SC,  // Main Chain - Side Chain
-        SC_SC,  // Side Chain - Side Chain
-    }
-
-    private HydrogenBond obtainHydrogenBond(List<Atom> donor, List<Atom> acceptor, TypeOfHydrogenBond typeOfHydrogenBond ) {
+    private HydrogenBond obtainHydrogenBond(List<Atom> donor, List<Atom> acceptor, HydrogenBondCriteria criteria) {
         final int indD = (donor.get(0).getName().charAt(0) == ('H')) ? 1 : 0;
         final int indH = (donor.get(0).getName().charAt(0) == ('H')) ? 0 : 1;
 
@@ -201,31 +222,33 @@ public final class HydrogenBondFinder {
 
 //      Checking if donor atom is not equal to acceptor atom, to eliminate cases when one atom can be donor and acceptor at the same time.
         if ( (donor.get(indD).getPDBserial() == acceptor.get(indA).getPDBserial())
-              && (donor.get(indD).getGroup().getChainId().equals(acceptor.get(indA).getGroup().getChainId())) ) {
+              && (donor.get(indD).getGroup().equals(acceptor.get(indA).getGroup())) ) {
+            return null;
+        }
+
+        final double distanceDA = Calc.getDistance(donor.get(indD), acceptor.get(indA));
+        if ( ! (distanceDA > criteria.getMinDistanceDA() && distanceDA < criteria.getMaxDistanceDA())) {
             return null;
         }
 
         final double distanceHA = Calc.getDistance(donor.get(indH), acceptor.get(indA));
-        final double distanceDA = Calc.getDistance(donor.get(indD), acceptor.get(indA));
+        if ( ! (distanceHA > criteria.getMinDistanceHA() && distanceHA < criteria.getMaxDistanceHA()) ) {
+            return null;
+        }
+
         final double angleDHA = MathHelper.angle(donor.get(indD), donor.get(indH), acceptor.get(indA));
+        if ( ! (angleDHA > criteria.getMinAngleDHA() && angleDHA < criteria.getMaxAngleDHA()) ) {
+            return null;
+        }
+
         final double angleHAAa = MathHelper.angle(donor.get(indH), acceptor.get(indA), acceptor.get(indAa));
+        if ( ! (angleHAAa > criteria.getMinAngleHAAa() && angleHAAa < criteria.getMaxAngleHAAa()) ) {
+            return null;
+        }
+
         final double angleDAAa = MathHelper.angle(donor.get(indD), acceptor.get(indA), acceptor.get(indAa));
-
-
-        switch (typeOfHydrogenBond) {
-            case MC_MC:
-                if ( ! (distanceDA < 3.9 && distanceHA < 2.5 && angleDHA > 90 && angleHAAa > 90 && angleDAAa > 90) ) {
-                   return null;
-                }
-                break;
-            case MC_SC:
-            case SC_SC:
-                if ( ! (distanceDA < 3.9 && distanceHA < 2.5 &&  angleDHA > 90) ) {
-                   return null;
-                }
-                break;
-            default:
-                return null;
+        if ( ! (angleDAAa > criteria.getMinAngleDAAa() && angleDAAa < criteria.getMaxAngleDAAa()) ) {
+            return null;
         }
 
         return new HydrogenBond(new AminoAcid(donor.get(indD).getGroup()), new AminoAcid(acceptor.get(indA).getGroup()),
@@ -233,13 +256,12 @@ public final class HydrogenBondFinder {
                                 distanceHA, distanceDA, angleDHA, angleHAAa, angleDAAa);
     }
 
-
-    private List<HydrogenBond> findHydrogenBonds(List<List<Atom>> donors, List<List<Atom>> acceptors, TypeOfHydrogenBond typeOfHydrogenBond) {
+    private List<HydrogenBond> findHydrogenBonds(List<List<Atom>> donors, List<List<Atom>> acceptors, HydrogenBondCriteria criteria) {
         List<HydrogenBond> foundHydrogenBonds = new ArrayList<>();
 
         donors.forEach(donor -> {
             acceptors.forEach(acceptor -> {
-                final HydrogenBond hydrogenBond = this.obtainHydrogenBond(donor, acceptor, typeOfHydrogenBond);
+                final HydrogenBond hydrogenBond = this.obtainHydrogenBond(donor, acceptor, criteria);
 
                 if (hydrogenBond != null) {
                     foundHydrogenBonds.add(hydrogenBond);
@@ -247,33 +269,6 @@ public final class HydrogenBondFinder {
             });
         });
         return foundHydrogenBonds;
-    }
-
-    public List<HydrogenBond> findMainMainHydrogenBonds() {
-       final List<List<Atom>> donors = this.getDonorsMainChain();
-       final List<List<Atom>> acceptors = this.getAcceptorsMainChain();
-
-        return this.findHydrogenBonds(donors, acceptors, TypeOfHydrogenBond.MC_MC);
-    }
-
-    public List<HydrogenBond> findMainSideHydrogenBonds() {
-        final List<List<Atom>> donorsMainChain = this.getDonorsMainChain();
-        final List<List<Atom>> donorsSideChain = this.getDonorsSideChain();
-
-        final List<List<Atom>> acceptorsMainChain = this.getAcceptorsMainChain();
-        final List<List<Atom>> acceptorsSideChain = this.getAcceptorsSideChain();
-
-        List<HydrogenBond> foundMainSideHydrogenBonds = this.findHydrogenBonds(donorsMainChain, acceptorsSideChain, TypeOfHydrogenBond.MC_SC);
-        foundMainSideHydrogenBonds.addAll(this.findHydrogenBonds(donorsSideChain, acceptorsMainChain, TypeOfHydrogenBond.MC_SC));
-
-        return foundMainSideHydrogenBonds;
-    }
-
-    public List<HydrogenBond> findSideSideHydrogenBonds() {
-        final List<List<Atom>> donors = this.getDonorsSideChain();
-        final List<List<Atom>> acceptors = this.getAcceptorsSideChain();
-
-        return this.findHydrogenBonds(donors, acceptors, TypeOfHydrogenBond.SC_SC);
     }
 
 }

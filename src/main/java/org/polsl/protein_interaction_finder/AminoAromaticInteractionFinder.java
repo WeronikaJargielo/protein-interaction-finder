@@ -98,7 +98,7 @@ public final class AminoAromaticInteractionFinder {
 
     private AminoAromaticInteraction obtainAminoAromaticInteraction(Atom cation, AromaticRing aromaticRing, AminoAromaticInteractionCriteria criteria) {
         final double distanceBtwCationRing = Calc.getDistance(cation, aromaticRing.getRingCentroid());
-        if ( ! (distanceBtwCationRing >= criteria.getMinDistanceBtwCationRing() && distanceBtwCationRing <= criteria.getMaxDistanceBtwCationRing())) {
+        if ( ! (distanceBtwCationRing > criteria.getMinDistanceBtwCationRing() && distanceBtwCationRing < criteria.getMaxDistanceBtwCationRing())) {
             return null;
         }
 

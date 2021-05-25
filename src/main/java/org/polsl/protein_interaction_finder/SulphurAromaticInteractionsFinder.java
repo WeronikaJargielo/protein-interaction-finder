@@ -43,7 +43,7 @@ public final class SulphurAromaticInteractionsFinder {
 
     private SulphurAromaticInteraction obtainSulphurAromaticInteraction(Atom sulphur, AromaticRing ring, SulphurAromaticInteractionCriteria criteria) {
         final double distanceBtwSRing = Calc.getDistance(sulphur, ring.getRingCentroid());
-        if ( ! (distanceBtwSRing > criteria.getMinDistanceBtwRingSulphur() && distanceBtwSRing <= criteria.getMaxDistanceBtwRingSulphur()) ) {
+        if ( ! (distanceBtwSRing >= criteria.getMinDistanceBtwRingSulphur() && distanceBtwSRing <= criteria.getMaxDistanceBtwRingSulphur()) ) {
             return null;
         }
 

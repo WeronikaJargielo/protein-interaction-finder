@@ -22,15 +22,15 @@ public final class HydrogenBondCriteria {
 
     public HydrogenBondCriteria() {
         this.minDistanceDA = 0;
-        this.maxDistanceDA = 3.9;
+        this.maxDistanceDA = Double.MAX_VALUE;
         this.minDistanceHA = 0;
         this.maxDistanceHA = 2.5;
         this.minAngleDHA = 90;
         this.maxAngleDHA = 180;
-        this.minAngleHAAa = 90;
-        this.maxAngleHAAa = 180;
-        this.minAngleDAAa = 90;
-        this.maxAngleDAAa = 180;
+        this.minAngleHAAa = 0;
+        this.maxAngleHAAa = Double.MAX_VALUE;
+        this.minAngleDAAa = 0;
+        this.maxAngleDAAa = Double.MAX_VALUE;
     }
 
     public HydrogenBondCriteria(double minDistanceDA, double maxDistanceDA, double minDistanceHA, double maxDistanceHA,

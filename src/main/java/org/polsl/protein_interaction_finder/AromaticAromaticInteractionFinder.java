@@ -35,13 +35,18 @@ public final class AromaticAromaticInteractionFinder {
 
     private AromaticAromaticInteraction obtainAromaticAromaticInteraction(AromaticRing firstRing, AromaticRing secondRing,
                                                                           AromaticAromaticInteractionCriteria criteria) {
+        // Check to eliminate TRP 5 to TRP 6 ring interactions.
+        if (firstRing.getAminoAcid().equals(secondRing.getAminoAcid())) {
+            return null;
+        }
+
         final double distanceBtwRings = Calc.getDistance(firstRing.getRingCentroid(), secondRing.getRingCentroid());
-        if ( ! (distanceBtwRings > criteria.getMinDistanceBtwRings() && distanceBtwRings <= criteria.getMaxDistanceBtwRings()) ) {
+        if ( ! (distanceBtwRings > criteria.getMinDistanceBtwRings() && distanceBtwRings < criteria.getMaxDistanceBtwRings()) ) {
             return null;
         }
 
         final double angleBtwRings = getAngleBetweenRings(firstRing, secondRing);
-        if ( ! (angleBtwRings > criteria.getMinAngleBtwRings() && angleBtwRings < criteria.getMaxAngleBtwRings()) ) {
+        if ( ! (angleBtwRings >= criteria.getMinAngleBtwRings() && angleBtwRings <= criteria.getMaxAngleBtwRings()) ) {
             return null;
         }
 

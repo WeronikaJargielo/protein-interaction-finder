@@ -16,9 +16,9 @@ public final class SulphurAromaticInteractionCriteria {
         this.minDistanceBtwRingSulphur = 0;
         this.maxDistanceBtwRingSulphur = 6;
         this.minElevationAngle = 0;
-        this.maxElevationAngle = 90;
+        this.maxElevationAngle = Double.MAX_VALUE;
         this.minEquatorialAngle = 0;
-        this.maxEquatorialAngle = 360;
+        this.maxEquatorialAngle = Double.MAX_VALUE;
     }
 
     public SulphurAromaticInteractionCriteria(double minDistanceBtwRingSulphur, double maxDistanceBtwRingSulphur,

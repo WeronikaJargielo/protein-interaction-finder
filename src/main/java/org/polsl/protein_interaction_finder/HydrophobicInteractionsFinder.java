@@ -50,7 +50,7 @@ public final class HydrophobicInteractionsFinder {
     private HydrophobicInteraction obtainHydrophobicInteraction(Atom firstAtom, Atom secondAtom, HydrophobicInteractionCriteria criteria) {
         final double distCAs = Calc.getDistance(firstAtom, secondAtom);
 
-        if (distCAs > criteria.getMinDistanceCAs() && distCAs <= criteria.getMaxDistanceCAs()) {
+        if (distCAs >= criteria.getMinDistanceCAs() && distCAs <= criteria.getMaxDistanceCAs()) {
             return new HydrophobicInteraction(new AminoAcid(firstAtom.getGroup()),
                                               new AminoAcid(secondAtom.getGroup()),
                                               distCAs);

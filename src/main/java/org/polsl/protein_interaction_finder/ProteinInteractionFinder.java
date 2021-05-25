@@ -13,84 +13,101 @@ public final class ProteinInteractionFinder {
     }
 
     public List<HydrogenBond> findMainMainHydrogenBonds() {
-        HydrogenBondFinder hydrogenBondFinder = new HydrogenBondFinder(pdbStructureParser);
-        return hydrogenBondFinder.findMainMainHydrogenBonds();
+        final HydrogenBondCriteria defaultCriteria = new HydrogenBondCriteria();
+        final HydrogenBondFinder hydrogenBondFinder = new HydrogenBondFinder(pdbStructureParser);
+        return hydrogenBondFinder.findMainMainHydrogenBonds(defaultCriteria);
+    }
+
+    public List<HydrogenBond> findMainMainHydrogenBonds(HydrogenBondCriteria userDefinedCriteria) {
+        final HydrogenBondFinder hydrogenBondFinder = new HydrogenBondFinder(pdbStructureParser);
+        return hydrogenBondFinder.findMainMainHydrogenBonds(userDefinedCriteria);
     }
 
     public List<HydrogenBond> findSideSideHydrogenBonds() {
-        HydrogenBondFinder hydrogenBondFinder = new HydrogenBondFinder(pdbStructureParser);
-        return hydrogenBondFinder.findSideSideHydrogenBonds();
+        final HydrogenBondCriteria defaultCriteria = new HydrogenBondCriteria();
+        final HydrogenBondFinder hydrogenBondFinder = new HydrogenBondFinder(pdbStructureParser);
+        return hydrogenBondFinder.findSideSideHydrogenBonds(defaultCriteria);
+    }
+
+    public List<HydrogenBond> findSideSideHydrogenBonds(HydrogenBondCriteria userDefinedCriteria) {
+        final HydrogenBondFinder hydrogenBondFinder = new HydrogenBondFinder(pdbStructureParser);
+        return hydrogenBondFinder.findSideSideHydrogenBonds(userDefinedCriteria);
     }
 
     public List<HydrogenBond> findMainSideHydrogenBonds() {
-        HydrogenBondFinder hydrogenBondFinder = new HydrogenBondFinder(pdbStructureParser);
-        return hydrogenBondFinder.findMainSideHydrogenBonds();
+        final HydrogenBondCriteria defaultCriteria = new HydrogenBondCriteria();
+        final HydrogenBondFinder hydrogenBondFinder = new HydrogenBondFinder(pdbStructureParser);
+        return hydrogenBondFinder.findMainSideHydrogenBonds(defaultCriteria);
+    }
+
+    public List<HydrogenBond> findMainSideHydrogenBonds(HydrogenBondCriteria userDefinedCriteria) {
+        final HydrogenBondFinder hydrogenBondFinder = new HydrogenBondFinder(pdbStructureParser);
+        return hydrogenBondFinder.findMainSideHydrogenBonds(userDefinedCriteria);
     }
 
     public List<DisulphideBridge> findDisulphideBridges() {
         final DisulphideBridgeCriteria defaultCriteria = new DisulphideBridgeCriteria();
-        DisulphideBridgesFinder disulphideBridgesFinder = new DisulphideBridgesFinder(pdbStructureParser);
+        final DisulphideBridgesFinder disulphideBridgesFinder = new DisulphideBridgesFinder(pdbStructureParser);
         return disulphideBridgesFinder.findDisulphideBridges(defaultCriteria);
     }
 
     public List<DisulphideBridge> findDisulphideBridges(DisulphideBridgeCriteria userDefinedCriteria) {
-        DisulphideBridgesFinder disulphideBridgesFinder = new DisulphideBridgesFinder(pdbStructureParser);
+        final DisulphideBridgesFinder disulphideBridgesFinder = new DisulphideBridgesFinder(pdbStructureParser);
         return disulphideBridgesFinder.findDisulphideBridges(userDefinedCriteria);
     }
 
     public List<SulphurAromaticInteraction> findSulphurAromaticInteractions() {
         final SulphurAromaticInteractionCriteria defaultCriteria = new SulphurAromaticInteractionCriteria();
-        SulphurAromaticInteractionsFinder sulphurAromaticInteractionsFinder = new SulphurAromaticInteractionsFinder(pdbStructureParser);
+        final SulphurAromaticInteractionsFinder sulphurAromaticInteractionsFinder = new SulphurAromaticInteractionsFinder(pdbStructureParser);
         return sulphurAromaticInteractionsFinder.findSulphurAromaticInteractions(defaultCriteria);
     }
 
     public List<SulphurAromaticInteraction> findSulphurAromaticInteractions(SulphurAromaticInteractionCriteria userDefinedCriteria) {
-        SulphurAromaticInteractionsFinder sulphurAromaticInteractionsFinder = new SulphurAromaticInteractionsFinder(pdbStructureParser);
+        final SulphurAromaticInteractionsFinder sulphurAromaticInteractionsFinder = new SulphurAromaticInteractionsFinder(pdbStructureParser);
         return sulphurAromaticInteractionsFinder.findSulphurAromaticInteractions(userDefinedCriteria);
     }
 
     public List<AminoAromaticInteraction> findAminoAromaticInteractions() {
-        AminoAromaticInteractionCriteria defaultCriteria = new AminoAromaticInteractionCriteria();
-        AminoAromaticInteractionFinder aminoAromaticInteractionFinder = new AminoAromaticInteractionFinder(pdbStructureParser);
+        final AminoAromaticInteractionCriteria defaultCriteria = new AminoAromaticInteractionCriteria();
+        final AminoAromaticInteractionFinder aminoAromaticInteractionFinder = new AminoAromaticInteractionFinder(pdbStructureParser);
         return aminoAromaticInteractionFinder.findAminoAromaticInteractions(defaultCriteria);
     }
 
     public List<AminoAromaticInteraction> findAminoAromaticInteractions(AminoAromaticInteractionCriteria userDefinedCriteria) {
-        AminoAromaticInteractionFinder aminoAromaticInteractionFinder = new AminoAromaticInteractionFinder(pdbStructureParser);
+        final AminoAromaticInteractionFinder aminoAromaticInteractionFinder = new AminoAromaticInteractionFinder(pdbStructureParser);
         return aminoAromaticInteractionFinder.findAminoAromaticInteractions(userDefinedCriteria);
     }
 
     public List<AromaticAromaticInteraction> findAromaticAromaticInteractions() {
-        AromaticAromaticInteractionCriteria defaultCriteria = new AromaticAromaticInteractionCriteria();
-        AromaticAromaticInteractionFinder aromaticAromaticInteractionFinder = new AromaticAromaticInteractionFinder(pdbStructureParser);
+        final AromaticAromaticInteractionCriteria defaultCriteria = new AromaticAromaticInteractionCriteria();
+        final AromaticAromaticInteractionFinder aromaticAromaticInteractionFinder = new AromaticAromaticInteractionFinder(pdbStructureParser);
         return aromaticAromaticInteractionFinder.findAromaticAromaticInteraction(defaultCriteria);
     }
 
     public List<AromaticAromaticInteraction> findAromaticAromaticInteractions(AromaticAromaticInteractionCriteria userDefinedCriteria) {
-        AromaticAromaticInteractionFinder aromaticAromaticInteractionFinder = new AromaticAromaticInteractionFinder(pdbStructureParser);
+        final AromaticAromaticInteractionFinder aromaticAromaticInteractionFinder = new AromaticAromaticInteractionFinder(pdbStructureParser);
         return aromaticAromaticInteractionFinder.findAromaticAromaticInteraction(userDefinedCriteria);
     }
 
     public List<IonicInteraction> findIonicInteractions() {
         final IonicInteractionCriteria defaultCriteria = new IonicInteractionCriteria ();
-        IonicInteractionsFinder ionicInteractionsFinder = new IonicInteractionsFinder(pdbStructureParser);
+        final IonicInteractionsFinder ionicInteractionsFinder = new IonicInteractionsFinder(pdbStructureParser);
         return ionicInteractionsFinder.findIonicInteractions(defaultCriteria);
     }
 
     public List<IonicInteraction> findIonicInteractions(IonicInteractionCriteria userDefinedCriteria) {
-        IonicInteractionsFinder ionicInteractionsFinder = new IonicInteractionsFinder(pdbStructureParser);
+        final IonicInteractionsFinder ionicInteractionsFinder = new IonicInteractionsFinder(pdbStructureParser);
         return ionicInteractionsFinder.findIonicInteractions(userDefinedCriteria);
     }
 
     public List<HydrophobicInteraction> findHydrophobicInteractions() {
         final HydrophobicInteractionCriteria defaultCriteria = new HydrophobicInteractionCriteria();
-        HydrophobicInteractionsFinder hydrophobicInteractionsFinder = new HydrophobicInteractionsFinder(pdbStructureParser);
-
+        final HydrophobicInteractionsFinder hydrophobicInteractionsFinder = new HydrophobicInteractionsFinder(pdbStructureParser);
         return hydrophobicInteractionsFinder.findHydrophobicInteractions(defaultCriteria);
     }
 
     public List<HydrophobicInteraction> findHydrophobicInteractions(HydrophobicInteractionCriteria userDefinedCriteria) {
-        HydrophobicInteractionsFinder hydrophobicInteractionsFinder = new HydrophobicInteractionsFinder(pdbStructureParser);
+        final HydrophobicInteractionsFinder hydrophobicInteractionsFinder = new HydrophobicInteractionsFinder(pdbStructureParser);
         return hydrophobicInteractionsFinder.findHydrophobicInteractions(userDefinedCriteria);
     }
 

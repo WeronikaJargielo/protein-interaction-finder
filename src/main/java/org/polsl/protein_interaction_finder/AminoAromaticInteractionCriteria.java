@@ -16,9 +16,9 @@ public final class AminoAromaticInteractionCriteria {
         this.minDistanceBtwCationRing = 3.4;
         this.maxDistanceBtwCationRing = 6;
         this.minPolarAngle = 0;
-        this.maxPolarAngle = 180;
+        this.maxPolarAngle = Double.MAX_VALUE;
         this.minAzimuthalAngle = 0;
-        this.maxAzimuthalAngle = 360;
+        this.maxAzimuthalAngle = Double.MAX_VALUE;
     }
 
     public AminoAromaticInteractionCriteria(double minDistanceBtwCationRing, double maxDistanceBtwCationRing,

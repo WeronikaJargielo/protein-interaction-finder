@@ -118,7 +118,7 @@ public final class IonicInteractionsFinder {
     private IonicInteraction obtainIonicInteraction(Atom anion, Atom cation, IonicInteractionCriteria criteria) {
         final double distanceBtwCentroids = Calc.getDistance(anion, cation);
 
-        if (distanceBtwCentroids > criteria.getMinDistanceBtwCentroids()
+        if (distanceBtwCentroids >= criteria.getMinDistanceBtwCentroids()
             && distanceBtwCentroids <= criteria.getMaxDistanceBtwCentroids()) {
 
             return new IonicInteraction(new AminoAcid(anion.getGroup()),

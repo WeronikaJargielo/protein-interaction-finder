@@ -2,8 +2,8 @@ package org.polsl.protein_interaction_finder;
 
 public class Main {
     public static void main(String[] args) {
-//        String filename = "../pdbFiles/2bi6.pdb";
-        String filename = "../pdbFiles/4hhb.pdb";
+        String filename = "../pdbFiles/2bi6.pdb";
+//        String filename = "../pdbFiles/4hhb.pdb";
 //        String filename = "../pdbFiles/7jgy.pdb";
 //        String filename = "../pdbFiles/6v5d.pdb";  // with histidines
 //        String filename = "../pdbFiles/6vga.pdb";
@@ -13,10 +13,10 @@ public class Main {
         try {
             ProteinInteractionFinder finder = new ProteinInteractionFinder(filename);
 
-            System.out.println("Hydrophobic interactions found:\nPosition Residue Chain Position Residue Chain DistanceBtwCAs");
+            System.out.println("\nHydrophobic interactions found:\nPosition Residue Chain Position Residue Chain DistanceBtwCAs");
             for (Object interaction : finder.findHydrophobicInteractions()) { System.out.println(interaction); }
 
-            System.out.println("Ionic interactions found:\nPosition Residue Chain Position Residue Chain DistanceBtwCentroidsOfChargedGroups");
+            System.out.println("\nIonic interactions found:\nPosition Residue Chain Position Residue Chain DistanceBtwCentroidsOfChargedGroups");
             for (Object interaction : finder.findIonicInteractions()) { System.out.println(interaction); }
 
 //            DisulphideBridgeCriteria disulphideBridgeCriteria = new DisulphideBridgeCriteria(0, 2.2, 0, 360, 0, 360, 0, 360, 0, 360, 0, 360);

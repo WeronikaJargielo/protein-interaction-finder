@@ -14,7 +14,7 @@ public final class AromaticAromaticInteractionCriteria {
         this.minDistanceBtwRings = 0;
         this.maxDistanceBtwRings = 7;
         this.minAngleBtwRings = 0;
-        this.maxAngleBtwRings = 360;
+        this.maxAngleBtwRings = Double.MAX_VALUE;
     }
 
     public AromaticAromaticInteractionCriteria(double minDistanceBtwRings, double maxDistanceBtwRings,
