@@ -12,6 +12,10 @@ public final class ProteinInteractionFinder {
         pdbStructureParser = new PdbStructureParser(pdbFilename);
     }
 
+    public PdbStructureParser getPdbStructureParser() {
+        return pdbStructureParser;
+    }
+
     public List<HydrogenBond> findMainMainHydrogenBonds() {
         final HydrogenBondCriteria defaultCriteria = new HydrogenBondCriteria();
         final HydrogenBondFinder hydrogenBondFinder = new HydrogenBondFinder(pdbStructureParser);

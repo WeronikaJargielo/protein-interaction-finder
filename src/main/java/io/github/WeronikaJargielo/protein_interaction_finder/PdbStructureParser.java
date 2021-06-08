@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-final class PdbStructureParser {
+public final class PdbStructureParser {
     private final Structure proteinStructure;
 
     PdbStructureParser(String pdbFilename) throws IOException, StructureException {
@@ -25,11 +25,24 @@ final class PdbStructureParser {
         return StructureIO.getStructure(pdbFilename);
     }
 
-    ArrayList<Atom> getAtoms(String[] atomNames) {
-        return new ArrayList<>(Arrays.asList(StructureTools.getAtomArray(proteinStructure, atomNames)));
+    public ArrayList<Atom> getAtoms(String[] atomNames) {
+        ArrayList<Atom> atoms = new ArrayList<>(Arrays.asList(StructureTools.getAtomArray(proteinStructure, atomNames)));
+
+        // Filter unrecognizable amino acid abbreviations.
+        atoms.removeIf((a) -> {
+            final String aminoAcidName = a.getGroup().getPDBName();
+            try {
+                final AminoAcidAbbreviations aminoAcidAbbr = AminoAcidAbbreviations.valueOf(aminoAcidName);
+            } catch (java.lang.IllegalArgumentException e) {
+                return true;
+            }
+            return false;
+        });
+
+        return atoms;
     }
 
-    ArrayList<Atom> getAtoms(String[] atomNames, List<AminoAcidAbbreviations> allowedAminoAcids) {
+    public ArrayList<Atom> getAtoms(String[] atomNames, List<AminoAcidAbbreviations> allowedAminoAcids) {
         ArrayList<Atom> atoms = this.getAtoms(atomNames);
 
         atoms.removeIf((a) -> {
@@ -41,7 +54,7 @@ final class PdbStructureParser {
         return atoms;
     }
 
-    ArrayList<AromaticRing> getAromaticRings() {
+    public ArrayList<AromaticRing> getAromaticRings() {
 
         final List<Atom> phenylalanineAtoms = getAtoms(new String[]{"CG", "CD1", "CD2", "CE1", "CE2", "CZ"}, Arrays.asList(AminoAcidAbbreviations.PHE));
         final List<Atom> tyrosineAtoms = getAtoms(new String[]{"CG", "CD1", "CD2", "CE1", "CE2", "CZ"}, Arrays.asList(AminoAcidAbbreviations.TYR));

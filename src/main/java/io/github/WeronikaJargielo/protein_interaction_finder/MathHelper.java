@@ -5,7 +5,7 @@ import org.biojava.nbio.structure.Atom;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-public final class MathHelper {
+final class MathHelper {
 
     private static final double radiansToDegreesCoefficient = (180/Math.PI);
 

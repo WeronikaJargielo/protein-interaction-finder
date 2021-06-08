@@ -65,17 +65,9 @@ public enum AminoAcidAbbreviations {
      */
     PRO,
     /**
-     * Pyrrolysine
-     */
-    PYL,
-    /**
      * Serine
      */
     SER,
-    /**
-     * Selenocysteine
-     */
-    SEC,
     /**
      * Threonine
      */
@@ -91,21 +83,5 @@ public enum AminoAcidAbbreviations {
     /**
      * Valine
      */
-    VAL,
-    /**
-     * Aspartic acid or Asparagine
-     */
-    ASX,
-    /**
-     * Glutamic acid or Glutamine
-     */
-    GLX,
-    /**
-     * Any amino acid
-     */
-    XAA,
-    /**
-     * Leucine or Isoleucine
-     */
-    XLE
+    VAL
 }

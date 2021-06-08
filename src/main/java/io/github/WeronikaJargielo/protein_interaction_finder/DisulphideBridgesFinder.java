@@ -55,11 +55,6 @@ public class DisulphideBridgesFinder {
                                    .findFirst()
                                    .orElse(-1);
 
-//      TODO: Sanity check - remove after development.
-        if ( ! (firstCys.get(indN).getName().equals("N") || secondCys.get(indN).getName().equals("N")) ) {
-            System.exit(-1);
-        }
-
         if ( ! (firstCys.get(indCA).getName().equals("CA") || secondCys.get(indCA).getName().equals("CA")) ) {
             System.exit(-1);
         }

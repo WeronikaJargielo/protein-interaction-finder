@@ -7,7 +7,7 @@
     <groupId>io.github.WeronikaJargielo</groupId>
     <artifactId>protein-interaction-finder</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <licenses>
         <license>

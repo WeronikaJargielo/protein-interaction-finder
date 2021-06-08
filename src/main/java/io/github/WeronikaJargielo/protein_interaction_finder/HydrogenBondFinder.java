@@ -61,11 +61,6 @@ public final class HydrogenBondFinder {
         final List<Atom> foundHs = pdbStructureParser.getAtoms(new String[] {HPdbName}, desiredAbbreviations);
 
         dublets.forEach(dublet -> {
-//          TODO: Sanity check - remove after development.
-            if (dublet.get(indN).getName().charAt(0) != ('N')) {
-                System.exit(-1);
-            }
-
             final Integer dubletSeqNum = dublet.get(indN).getGroup().getResidueNumber().getSeqNum();
             final String dubletChain = dublet.get(indN).getGroup().getChain().getName();
 
