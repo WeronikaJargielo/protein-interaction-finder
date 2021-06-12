@@ -57,7 +57,7 @@ public final class SulphurAromaticInteractionsFinder {
             return null;
         }
 
-        return new SulphurAromaticInteraction(new AminoAcid(ring.getAminoAcid()),
+        return new SulphurAromaticInteraction(ring.getAminoAcid(),
                                               new AminoAcid(sulphur.getGroup()),
                                               distanceBtwSRing, elevationAngle, equatorialAngle);
     }

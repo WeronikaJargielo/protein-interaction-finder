@@ -10,12 +10,21 @@ import java.util.Arrays;
 import java.util.List;
 
 
+/**
+ * Class representing single aromatic ring in protein.
+ * Considered aromatic rings are phenyl ring in Phe, Tyr and Trp and pyrrole ring in Trp.
+ */
 public final class AromaticRing {
     private final Atom[] atoms;
     private final Group aminoAcid;
     private final Atom ringCentroid;
     private final Vector3d normalVector;
 
+    /**
+     * Instantiates new Aromatic ring.
+     *
+     * @param atoms Atoms forming the aromatic ring.
+     */
     public AromaticRing(List<Atom> atoms) {
         this.atoms = new Atom[atoms.size()];
         atoms.toArray(this.atoms);
@@ -26,18 +35,47 @@ public final class AromaticRing {
         this.normalVector.normalize();
     }
 
+    /**
+     * Returns atoms forming the aromatic ring.
+     *
+     * @return Atoms forming the aromatic ring.
+     */
     public Atom[] getAtoms() {
         return atoms;
     }
 
-    public Group getAminoAcid() {
+    /**
+     * Returns group representing aromatic ring's amino acid.
+     *
+     * @return BioJava Group representing aromatic ring's amino acid.
+     */
+    public Group getGroup() {
         return aminoAcid;
     }
 
+    /**
+     * Returns amino acid of the aromatic ring.
+     *
+     * @return Amino acid of the aromatic ring.
+     */
+    public AminoAcid getAminoAcid() {
+        return new AminoAcid(aminoAcid);
+    }
+
+    /**
+     * Returns ring centroid.
+     *
+     * @return Atom representing geometrical centre of aromatic ring.
+     */
     public Atom getRingCentroid() {
         return ringCentroid;
     }
 
+    /**
+     * Returns normal vector to aromatic ring plane.
+     *
+     * @return Normal vector to aromatic ring plane.
+     */
     public Vector3d getNormalVector() {
         return normalVector;
     }
@@ -71,12 +109,26 @@ public final class AromaticRing {
         return MathHelper.calculateCrossProduct(beginVec, endVec);
     }
 
+    /**
+     * Calculate polar angle for given atom.
+     * See angle β <a href="https://github.com/WeronikaJargielo/protein-interaction-finder/blob/master/documentation/InteractionsDefinitions.pdf">here</a>.
+     *
+     * @param atom Atom to calculate the polar angle for.
+     * @return Polar angle for given atom.
+     */
     public double calculatePolarAngleOfAtom(Atom atom) {
         final Vector3d centroidAtomVec = MathHelper.calculateVector(this.ringCentroid, atom);
 
-        return MathHelper.radiansToDegrees(this.normalVector.angle(centroidAtomVec));
+        return MathHelper.angle(this.normalVector, centroidAtomVec);
     }
 
+    /**
+     * Calculate azimuthal angle for given atom.
+     * See angle α <a href="https://github.com/WeronikaJargielo/protein-interaction-finder/blob/master/documentation/InteractionsDefinitions.pdf">here</a>.
+     *
+     * @param atom Atom to calculate the azimuthal angle for.
+     * @return  Azimuthal angle for given atom.
+     */
     public double calculateAzimuthalAngleOfAtom(Atom atom) {
         double azimuthalAngle = this.calculateEquatorialAngleOfAtom(atom);
 
@@ -88,10 +140,24 @@ public final class AromaticRing {
         return azimuthalAngle;
     }
 
+    /**
+     * Calculate elevation angle for given atom.
+     * See angle β <a href="https://github.com/WeronikaJargielo/protein-interaction-finder/blob/master/documentation/InteractionsDefinitions.pdf">here</a>.
+     *
+     * @param atom Atom to calculate the elevation angle for.
+     * @return  Elevation angle for given atom.
+     */
     public double calculateElevationAngleOfAtom(Atom atom) {
         return Math.abs(90 - this.calculatePolarAngleOfAtom(atom));
     }
 
+    /**
+     * Calculate equatorial angle for given atom.
+         * See angle α <a href="https://github.com/WeronikaJargielo/protein-interaction-finder/blob/master/documentation/InteractionsDefinitions.pdf">here</a>.
+     *
+     * @param atom Atom to calculate the equatorial angle for.
+     * @return  Equatorial angle for given atom.
+     */
     public double calculateEquatorialAngleOfAtom(Atom atom) {
         final Vector3d centroidToRingAtomVec = MathHelper.calculateVector(this.ringCentroid, this.getRingAtomForEquatorialAngle());
         final Point3d atomProjection = this.calculateAtomProjectionOnRing(atom);
@@ -110,6 +176,12 @@ public final class AromaticRing {
         return MathHelper.radiansToDegrees(equatorialAngle);
     }
 
+    /**
+     * Calculate projection of given atom on aromatic ring plane.
+     *
+     * @param atom Atom to calculate the projection of.
+     * @return Point representing projection of atom on aromatic ring plane.
+     */
     public Point3d calculateAtomProjectionOnRing(Atom atom) {
         final Atom anyRingAtom = atoms[0];
 

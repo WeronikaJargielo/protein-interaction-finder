@@ -2,6 +2,10 @@ package io.github.WeronikaJargielo.protein_interaction_finder;
 
 import java.util.Objects;
 
+/**
+ * Class representing criteria for identifying amino-aromatic interactions.
+ * See <a href="https://github.com/WeronikaJargielo/protein-interaction-finder/blob/master/documentation/InteractionsDefinitions.pdf">here</a>.
+ */
 public final class AminoAromaticInteractionCriteria {
 
     final private double minDistanceBtwCationRing;
@@ -12,6 +16,10 @@ public final class AminoAromaticInteractionCriteria {
     final private double maxAzimuthalAngle;
 
 
+    /**
+     * Instantiates new amino-aromatic interaction criteria using default boundary values.
+     * See <a href="https://github.com/WeronikaJargielo/protein-interaction-finder/blob/master/documentation/InteractionsDefinitions.pdf">here</a>.
+     */
     public AminoAromaticInteractionCriteria() {
         this.minDistanceBtwCationRing = 3.4;
         this.maxDistanceBtwCationRing = 6;
@@ -21,6 +29,17 @@ public final class AminoAromaticInteractionCriteria {
         this.maxAzimuthalAngle = Double.MAX_VALUE;
     }
 
+    /**
+     * Instantiates new amino-aromatic interaction criteria using custom boundary values.
+     * See <a href="https://github.com/WeronikaJargielo/protein-interaction-finder/blob/master/documentation/InteractionsDefinitions.pdf">here</a>.
+     *
+     * @param minDistanceBtwCationRing Minimum distance between aromatic ring centroid and amino group representative.
+     * @param maxDistanceBtwCationRing Maximum distance between aromatic ring centroid and amino group representative.
+     * @param minPolarAngle            Minimum polar angle for aromatic ring and amino group representative.
+     * @param maxPolarAngle            Maximum polar angle for aromatic ring and amino group representative.
+     * @param minAzimuthalAngle        Minimum azimuthal angle for aromatic ring and amino group representative.
+     * @param maxAzimuthalAngle        Maximum azimuthal angle for aromatic ring and amino group representative.
+     */
     public AminoAromaticInteractionCriteria(double minDistanceBtwCationRing, double maxDistanceBtwCationRing,
                                             double minPolarAngle, double maxPolarAngle,
                                             double minAzimuthalAngle, double maxAzimuthalAngle) {
@@ -33,26 +52,56 @@ public final class AminoAromaticInteractionCriteria {
         this.maxAzimuthalAngle = maxAzimuthalAngle;
     }
 
+    /**
+     * Returns minimum distance between aromatic ring centroid and amino group representative.
+     *
+     * @return Minimum distance between aromatic ring centroid and amino group representative.
+     */
     public double getMinDistanceBtwCationRing() {
         return minDistanceBtwCationRing;
     }
 
+    /**
+     * Returns maximum distance between aromatic ring centroid and amino group representative.
+     *
+     * @return Maximum distance between aromatic ring centroid and amino group representative.
+     */
     public double getMaxDistanceBtwCationRing() {
         return maxDistanceBtwCationRing;
     }
 
+    /**
+     * Returns minimum polar angle for aromatic ring and amino group representative.
+     *
+     * @return Minimum polar angle for aromatic ring and amino group representative.
+     */
     public double getMinPolarAngle() {
         return minPolarAngle;
     }
 
+    /**
+     * Returns maximum polar angle for aromatic ring and amino group representative.
+     *
+     * @return Maximum polar angle for aromatic ring and amino group representative.
+     */
     public double getMaxPolarAngle() {
         return maxPolarAngle;
     }
 
+    /**
+     * Returns minimum azimuthal angle for aromatic ring and amino group representative.
+     *
+     * @return Minimum azimuthal angle for aromatic ring and amino group representative.
+     */
     public double getMinAzimuthalAngle() {
         return minAzimuthalAngle;
     }
 
+    /**
+     * Returns maximum azimuthal angle for aromatic ring and amino group representative.
+     *
+     * @return Maximum azimuthal angle for aromatic ring and amino group representative.
+     */
     public double getMaxAzimuthalAngle() {
         return maxAzimuthalAngle;
     }

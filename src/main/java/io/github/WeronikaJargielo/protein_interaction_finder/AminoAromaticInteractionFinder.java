@@ -112,7 +112,7 @@ public final class AminoAromaticInteractionFinder {
             return null;
         }
 
-        return new AminoAromaticInteraction(new AminoAcid(aromaticRing.getAminoAcid()),
+        return new AminoAromaticInteraction(aromaticRing.getAminoAcid(),
                                             new AminoAcid(cation.getGroup()),
                                             distanceBtwCationRing, polarAngle, azimuthalAngle);
     }

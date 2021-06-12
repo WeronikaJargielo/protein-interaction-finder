@@ -77,18 +77,18 @@ public class DisulphideBridgesFinder {
         final double absDihAngleSS = Math.abs(Calc.torsionAngle(firstCys.get(indCB), firstCys.get(indSG), secondCys.get(indSG), secondCys.get(indCB)));
         if ( ! (absDihAngleSS >= criteria.getMinAbsDihAngleSS() && absDihAngleSS <= criteria.getMaxAbsDihAngleSS()) ) { return null; }
 
-        final double absDihAngle11 = Math.abs(Calc.torsionAngle(firstCys.get(indN), firstCys.get(indCA), firstCys.get(indCB), firstCys.get(indSG)));
-        if ( ! ((absDihAngle11 >= criteria.getLowerRangeMinAbsDihAngle11() && absDihAngle11 <= criteria.getLowerRangeMaxAbsDihAngle11())
-                 || (absDihAngle11 >= criteria.getUpperRangeMinAbsDihAngle11() && absDihAngle11 <= criteria.getUpperRangeMaxAbsDihAngle11())) ) { return null; }
+        final double absDihAngle1 = Math.abs(Calc.torsionAngle(firstCys.get(indN), firstCys.get(indCA), firstCys.get(indCB), firstCys.get(indSG)));
+        if ( ! ((absDihAngle1 >= criteria.getLowerRangeMinAbsDihAngle1() && absDihAngle1 <= criteria.getLowerRangeMaxAbsDihAngle1())
+                 || (absDihAngle1 >= criteria.getUpperRangeMinAbsDihAngle1() && absDihAngle1 <= criteria.getUpperRangeMaxAbsDihAngle1())) ) { return null; }
 
-        final double absDihAngle21 = Math.abs(Calc.torsionAngle(secondCys.get(indSG), secondCys.get(indCB), secondCys.get(indCA), secondCys.get(indN)));
-        if ( ! ((absDihAngle21 >= criteria.getLowerRangeMinAbsDihAngle21() && absDihAngle21 <= criteria.getLowerRangeMaxAbsDihAngle21())
-                || (absDihAngle21 >= criteria.getUpperRangeMinAbsDihAngle21() && absDihAngle21 <= criteria.getUpperRangeMaxAbsDihAngle21())) ) { return null; }
+        final double absDihAngle2 = Math.abs(Calc.torsionAngle(secondCys.get(indSG), secondCys.get(indCB), secondCys.get(indCA), secondCys.get(indN)));
+        if ( ! ((absDihAngle2 >= criteria.getLowerRangeMinAbsDihAngle2() && absDihAngle2 <= criteria.getLowerRangeMaxAbsDihAngle2())
+                || (absDihAngle2 >= criteria.getUpperRangeMinAbsDihAngle2() && absDihAngle2 <= criteria.getUpperRangeMaxAbsDihAngle2())) ) { return null; }
 
         return new DisulphideBridge(new AminoAcid(firstCys.get(indSG).getGroup()),
                                     new AminoAcid(secondCys.get(indSG).getGroup()),
                                     distanceBtwCAs, distanceBtwCBs, distanceBtwSS,
-                                    absDihAngleSS, absDihAngle11, absDihAngle21);
+                                    absDihAngleSS, absDihAngle1, absDihAngle2);
     }
 
 }

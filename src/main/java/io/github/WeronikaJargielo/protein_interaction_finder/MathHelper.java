@@ -34,14 +34,17 @@ final class MathHelper {
         return angleInRadians*radiansToDegreesCoefficient;
     }
 
+    public static double angle(Vector3d firstVec, Vector3d secondVec) {
+        return radiansToDegrees( Math.acos((firstVec.x*secondVec.x +
+                                            firstVec.y*secondVec.y +
+                                            firstVec.z*secondVec.z) / (firstVec.length() * secondVec.length())) );
+    }
+
     public static double angle(Atom firstAtom, Atom secondAtom, Atom thirdAtom) {
         final Vector3d secondFirstVec = calculateVector(secondAtom, firstAtom);
         final Vector3d secondThirdVec = calculateVector(secondAtom, thirdAtom);
 
-        return radiansToDegrees( Math.acos((secondFirstVec.x*secondThirdVec.x +
-                                            secondFirstVec.y*secondThirdVec.y +
-                                            secondFirstVec.z*secondThirdVec.z) / (secondFirstVec.length() * secondThirdVec.length())) );
+        return MathHelper.angle(secondFirstVec, secondThirdVec);
     }
-
 
 }

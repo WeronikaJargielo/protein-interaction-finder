@@ -2,6 +2,10 @@ package io.github.WeronikaJargielo.protein_interaction_finder;
 
 import java.util.Objects;
 
+/**
+ * Class representing criteria for identifying sulphur-aromatic interactions.
+ * See <a href="https://github.com/WeronikaJargielo/protein-interaction-finder/blob/master/documentation/InteractionsDefinitions.pdf">here</a>.
+ */
 public final class SulphurAromaticInteractionCriteria {
 
     final private double minDistanceBtwRingSulphur;
@@ -12,6 +16,10 @@ public final class SulphurAromaticInteractionCriteria {
     final private double maxEquatorialAngle;
 
 
+    /**
+     * Instantiates new sulphur-aromatic interaction criteria using default boundary values.
+     * See <a href="https://github.com/WeronikaJargielo/protein-interaction-finder/blob/master/documentation/InteractionsDefinitions.pdf">here</a>.
+     */
     public SulphurAromaticInteractionCriteria() {
         this.minDistanceBtwRingSulphur = 0;
         this.maxDistanceBtwRingSulphur = 6;
@@ -21,6 +29,17 @@ public final class SulphurAromaticInteractionCriteria {
         this.maxEquatorialAngle = Double.MAX_VALUE;
     }
 
+    /**
+     * Instantiates new sulphur-aromatic interaction criteria using custom boundary values.
+     * See <a href="https://github.com/WeronikaJargielo/protein-interaction-finder/blob/master/documentation/InteractionsDefinitions.pdf">here</a>.
+     *
+     * @param minDistanceBtwRingSulphur Minimum distance between aromatic ring centroid and sulphur atom.
+     * @param maxDistanceBtwRingSulphur Maximum distance between aromatic ring centroid and sulphur atom.
+     * @param minElevationAngle         Minimum elevation angle for aromatic ring and sulphur atom.
+     * @param maxElevationAngle         Maximum elevation angle for aromatic ring and sulphur atom.
+     * @param minEquatorialAngle        Minimum equatorial angle for aromatic ring and sulphur atom.
+     * @param maxEquatorialAngle        Maximum equatorial angle for aromatic ring and sulphur atom.
+     */
     public SulphurAromaticInteractionCriteria(double minDistanceBtwRingSulphur, double maxDistanceBtwRingSulphur,
                                               double minElevationAngle, double maxElevationAngle,
                                               double minEquatorialAngle, double maxEquatorialAngle) {
@@ -33,26 +52,56 @@ public final class SulphurAromaticInteractionCriteria {
         this.maxEquatorialAngle = maxEquatorialAngle;
     }
 
+    /**
+     * Returns minimum distance between aromatic ring centroid and sulphur atom.
+     *
+     * @return Minimum distance between aromatic ring centroid and sulphur atom.
+     */
     public double getMinDistanceBtwRingSulphur() {
         return minDistanceBtwRingSulphur;
     }
 
+    /**
+     * Returns maximum distance between aromatic ring centroid and sulphur atom.
+     *
+     * @return Maximum distance between aromatic ring centroid and sulphur atom.
+     */
     public double getMaxDistanceBtwRingSulphur() {
         return maxDistanceBtwRingSulphur;
     }
 
+    /**
+     * Returns minimum elevation angle for aromatic ring and sulphur atom.
+     *
+     * @return Minimum elevation angle for aromatic ring and sulphur atom.
+     */
     public double getMinElevationAngle() {
         return minElevationAngle;
     }
 
+    /**
+     * Returns maximum elevation angle for aromatic ring and sulphur atom.
+     *
+     * @return Maximum elevation angle for aromatic ring and sulphur atom.
+     */
     public double getMaxElevationAngle() {
         return maxElevationAngle;
     }
 
+    /**
+     * Returns minimum equatorial angle for aromatic ring and sulphur atom.
+     *
+     * @return Minimum equatorial angle for aromatic ring and sulphur atom.
+     */
     public double getMinEquatorialAngle() {
         return minEquatorialAngle;
     }
 
+    /**
+     * Returns maximum equatorial angle for aromatic ring and sulphur atom.
+     *
+     * @return Maximum equatorial angle for aromatic ring and sulphur atom.
+     */
     public double getMaxEquatorialAngle() {
         return maxEquatorialAngle;
     }

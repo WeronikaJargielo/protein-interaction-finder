@@ -1,7 +1,7 @@
 package io.github.WeronikaJargielo.protein_interaction_finder;
 
 /**
- * 3 digit abbreviations for each existing amino acid.
+ *  IUPAC abbreviations for each natural amino acid.
  */
 public enum AminoAcidAbbreviations {
     /**

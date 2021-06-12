@@ -10,13 +10,28 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Wrapper for BioJava Structure class.
+ */
 public final class PdbStructureParser {
     private final Structure proteinStructure;
 
+    /**
+     * Instantiates new PdbStructureParser by parsing given PDB file to BioJava Structure object.
+     *
+     * @param pdbFilename Path to PDB file to parse.
+     * @throws IOException        Probably given PDB file does not exist.
+     * @throws StructureException Probably given PDB file is incorrectly formatted.
+     */
     PdbStructureParser(String pdbFilename) throws IOException, StructureException {
         proteinStructure = readProteinStructure(pdbFilename);
     }
 
+    /**
+     * Returns parsed protein structure.
+     *
+     * @return Parsed BioJava's Structure object.
+     */
     public Structure getProteinStructure() {
         return proteinStructure;
     }
@@ -25,6 +40,14 @@ public final class PdbStructureParser {
         return StructureIO.getStructure(pdbFilename);
     }
 
+    /**
+     * Returns atoms of requested atoms' names present in parsed PDB structure.
+     *
+     * Note: for each amino acid atoms are added to returned list only if all requested atoms are present in particular amino acid.
+     *
+     * @param atomNames Array of requested PDB atoms' names (compatible with IUPAC naming convention).
+     * @return Atoms of requested names present in parsed PDB structure.
+     */
     public ArrayList<Atom> getAtoms(String[] atomNames) {
         ArrayList<Atom> atoms = new ArrayList<>(Arrays.asList(StructureTools.getAtomArray(proteinStructure, atomNames)));
 
@@ -42,6 +65,15 @@ public final class PdbStructureParser {
         return atoms;
     }
 
+    /**
+     * Returns atoms of requested atoms' names from allowed amino acids which are present in parsed PDB structure.
+     *
+     * Note: For each amino acid atoms are added to returned list only if all requested atoms are present in particular amino acid.
+     *
+     * @param atomNames         Array of requested PDB atoms' names (compatible with IUPAC naming convention).
+     * @param allowedAminoAcids Desired amino acids to look for atoms in.
+     * @return Atoms of requested names present in parsed PDB structure belonging to desired allowedAminoAcids.
+     */
     public ArrayList<Atom> getAtoms(String[] atomNames, List<AminoAcidAbbreviations> allowedAminoAcids) {
         ArrayList<Atom> atoms = this.getAtoms(atomNames);
 
@@ -54,6 +86,12 @@ public final class PdbStructureParser {
         return atoms;
     }
 
+    /**
+     * Returns aromatic rings present in parsed PDB structure.
+     * @see io.github.WeronikaJargielo.protein_interaction_finder.AromaticRing
+     *
+     * @return Aromatic rings present in parsed PDB structure.
+     */
     public ArrayList<AromaticRing> getAromaticRings() {
 
         final List<Atom> phenylalanineAtoms = getAtoms(new String[]{"CG", "CD1", "CD2", "CE1", "CE2", "CZ"}, Arrays.asList(AminoAcidAbbreviations.PHE));

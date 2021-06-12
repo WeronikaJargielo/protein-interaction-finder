@@ -4,33 +4,64 @@ import org.biojava.nbio.structure.Group;
 
 import java.util.Objects;
 
+/**
+ * Class representing single amino acid in protein.
+ * It contains its abbreviation, chain ID and position in that chain.
+ */
 public final class AminoAcid {
-    private final int position;
     private final AminoAcidAbbreviations abbreviation;
-    private final String chain;
+    private final String chainId;
+    private final int position;
 
-    public AminoAcid(int position, AminoAcidAbbreviations abbreviation, String chain) {
+    /**
+     * Instantiates new Amino acid.
+     *
+     * @param abbreviation Abbreviation of amino acid name.
+     * @param chainId      Protein chain ID.
+     * @param position     Position in given chain.
+     */
+    public AminoAcid(AminoAcidAbbreviations abbreviation, String chainId, int position) {
         this.position = position;
         this.abbreviation = abbreviation;
-        this.chain = chain;
+        this.chainId = chainId;
     }
 
+    /**
+     * Instantiates new Amino acid.
+     *
+     * @param aminoAcidGroup Group which can be obtained from BioJava's Atom.
+     */
     public AminoAcid(Group aminoAcidGroup) {
         this.position = aminoAcidGroup.getResidueNumber().getSeqNum();
         this.abbreviation = AminoAcidAbbreviations.valueOf(aminoAcidGroup.getPDBName());
-        this.chain = aminoAcidGroup.getChain().getName();
+        this.chainId = aminoAcidGroup.getChain().getName();
     }
 
-    public int getPosition() {
-        return position;
-    }
-
+    /**
+     * Returns amino acid abbreviation.
+     *
+     * @return Amino acid abbreviation.
+     */
     public AminoAcidAbbreviations getAbbreviation() {
         return abbreviation;
     }
 
-    public String getChain() {
-        return chain;
+    /**
+     * Returns chain ID of amino acid.
+     *
+     * @return Chain ID of amino acid.
+     */
+    public String getChainId() {
+        return chainId;
+    }
+
+    /**
+     * Returns amino acid position in protein chain.
+     *
+     * @return Amino acid position in protein chain.
+     */
+    public int getPosition() {
+        return position;
     }
 
     @Override
@@ -40,17 +71,17 @@ public final class AminoAcid {
         AminoAcid aminoAcid = (AminoAcid) o;
         return position == aminoAcid.position &&
                 abbreviation == aminoAcid.abbreviation &&
-                chain.equals(aminoAcid.chain);
+                chainId.equals(aminoAcid.chainId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(position, abbreviation, chain);
+        return Objects.hash(position, abbreviation, chainId);
     }
 
     @Override
     public String toString() {
-        return  "" + position + '\t' + abbreviation + '\t' + chain;
+        return  "" + position + '\t' + abbreviation + '\t' + chainId;
     }
 
 
