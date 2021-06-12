@@ -127,6 +127,7 @@ public final class ProteinInteractionFinder {
      * Found bridges satisfy custom criteria.
      * @see io.github.WeronikaJargielo.protein_interaction_finder.DisulphideBridgeCriteria
      *
+     * @param userDefinedCriteria Custom criteria that will be used for disulphide bridges identification.
      * @return List of disulphide bridges satisfying custom criteria.
      */
     public List<DisulphideBridge> findDisulphideBridges(DisulphideBridgeCriteria userDefinedCriteria) {
@@ -152,6 +153,7 @@ public final class ProteinInteractionFinder {
      * Found interactions satisfy custom criteria.
      * @see io.github.WeronikaJargielo.protein_interaction_finder.SulphurAromaticInteractionCriteria
      *
+     * @param userDefinedCriteria Custom criteria that will be used for sulphur-aromatic interactions identification.
      * @return List of sulphur-aromatic interactions satisfying custom criteria.
      */
     public List<SulphurAromaticInteraction> findSulphurAromaticInteractions(SulphurAromaticInteractionCriteria userDefinedCriteria) {
@@ -177,6 +179,7 @@ public final class ProteinInteractionFinder {
      * Found interactions satisfy custom criteria.
      * @see io.github.WeronikaJargielo.protein_interaction_finder.AminoAromaticInteractionCriteria
      *
+     * @param userDefinedCriteria Custom criteria that will be used for amino-aromatic interactions identification.
      * @return List of amino-aromatic interactions satisfying custom criteria.
      */
     public List<AminoAromaticInteraction> findAminoAromaticInteractions(AminoAromaticInteractionCriteria userDefinedCriteria) {
@@ -202,6 +205,7 @@ public final class ProteinInteractionFinder {
      * Found interactions satisfy custom criteria.
      * @see io.github.WeronikaJargielo.protein_interaction_finder.AromaticAromaticInteractionCriteria
      *
+     * @param userDefinedCriteria Custom criteria that will be used for aromatic-aromatic interactions identification.
      * @return List of aromatic-aromatic interactions satisfying custom criteria.
      */
     public List<AromaticAromaticInteraction> findAromaticAromaticInteractions(AromaticAromaticInteractionCriteria userDefinedCriteria) {
@@ -227,6 +231,7 @@ public final class ProteinInteractionFinder {
      * Found interactions satisfy custom criteria.
      * @see io.github.WeronikaJargielo.protein_interaction_finder.IonicInteractionCriteria
      *
+     * @param userDefinedCriteria Custom criteria that will be used for ionic interactions identification.
      * @return List of ionic interactions satisfying custom criteria.
      */
     public List<IonicInteraction> findIonicInteractions(IonicInteractionCriteria userDefinedCriteria) {
@@ -252,6 +257,7 @@ public final class ProteinInteractionFinder {
      * Found interactions satisfy custom criteria.
      * @see io.github.WeronikaJargielo.protein_interaction_finder.HydrophobicInteractionCriteria
      *
+     * @param userDefinedCriteria Custom criteria that will be used for hydrophobic interactions identification.
      * @return List of hydrophobic interactions satisfying custom criteria.
      */
     public List<HydrophobicInteraction> findHydrophobicInteractions(HydrophobicInteractionCriteria userDefinedCriteria) {

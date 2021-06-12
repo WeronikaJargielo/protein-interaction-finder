@@ -7,7 +7,7 @@ import org.biojava.nbio.structure.Calc;
 import java.util.*;
 import java.util.stream.IntStream;
 
-public class DisulphideBridgesFinder {
+final class DisulphideBridgesFinder {
     private final PdbStructureParser pdbStructureParser;
 
     private final List<AminoAcidAbbreviations> allowedAminoAcids = Arrays.asList(AminoAcidAbbreviations.CYS);

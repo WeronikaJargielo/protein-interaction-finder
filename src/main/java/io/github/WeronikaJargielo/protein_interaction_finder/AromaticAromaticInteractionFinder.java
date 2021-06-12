@@ -5,7 +5,7 @@ import org.biojava.nbio.structure.Calc;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class AromaticAromaticInteractionFinder {
+final class AromaticAromaticInteractionFinder {
 
     private final PdbStructureParser pdbStructureParser;
 

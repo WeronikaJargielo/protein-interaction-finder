@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
-public final class AminoAromaticInteractionFinder {
+final class AminoAromaticInteractionFinder {
 
     private final class Cation {
         public final String[] atoms;

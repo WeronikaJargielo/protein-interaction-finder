@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
-public final class IonicInteractionsFinder {
+final class IonicInteractionsFinder {
 
     // Inner class representing ion (anionic and cationic) interactee which create ionic interaction.
     private final class IonInteractee {

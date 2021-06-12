@@ -6,7 +6,7 @@ import org.biojava.nbio.structure.Calc;
 import java.util.*;
 
 
-public final class HydrophobicInteractionsFinder {
+final class HydrophobicInteractionsFinder {
 
     private final PdbStructureParser pdbStructureParser;
     private final List<AminoAcidAbbreviations> nonPolarAminoAcids = Arrays.asList(AminoAcidAbbreviations.ALA,

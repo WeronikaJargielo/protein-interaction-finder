@@ -7,7 +7,7 @@ import org.biojava.nbio.structure.Calc;
 import java.util.*;
 import java.util.function.Function;
 
-public final class HydrogenBondFinder {
+final class HydrogenBondFinder {
 
     // Inner class representing donors and acceptors which create hydrogen bond.
     final private class BondParticipant {
