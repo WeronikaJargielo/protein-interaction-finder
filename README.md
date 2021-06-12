@@ -1,4 +1,4 @@
-[![Version](http://img.shields.io/badge/version-1.0.0-blue.svg?style=flat)](https://search.maven.org/artifact/io.github.WeronikaJargielo/protein-interaction-finder/1.0.0/jar)
+[![Version](http://img.shields.io/badge/version-1.0.1-blue.svg?style=flat)](https://search.maven.org/artifact/io.github.WeronikaJargielo/protein-interaction-finder/1.0.1/jar)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/WeronikaJargielo/protein-interaction-finder/blob/master/LICENSE)
 
 
@@ -30,12 +30,15 @@ If you are using Maven you can add the dependency to ProteinInteractionFinder by
         <dependency>
             <groupId>io.github.WeronikaJargielo</groupId>
             <artifactId>protein-interaction-finder</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
         </dependency>
-    </dependencies>
     <!-- other dependencies -->
     </dependencies>
 ```
+
+
+### Documentation
+Public API documentation is available [here](https://weronikajargielo.github.io/protein-interaction-finder/).
 
 
 ### Example
