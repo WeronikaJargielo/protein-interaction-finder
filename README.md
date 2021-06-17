@@ -43,4 +43,4 @@ Public API documentation is available [here](https://weronikajargielo.github.io/
 
 ### Example
 
-Basic usage example is presented in examples/Main.java file.
+Basic usage example is presented in [examples/Main.java](https://github.com/WeronikaJargielo/protein-interaction-finder/blob/master/examples/Main.java).
