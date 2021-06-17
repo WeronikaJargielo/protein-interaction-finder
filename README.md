@@ -9,7 +9,7 @@ ProteinInteractionFinder (PIF) is a Java 11 library for determining interatomic 
 Proteins play a huge role in the functioning of all living organisms.
 The set of interatomic interactions found in proteins has a great impact on controlling their spatial structures and dynamics. Moreover, it can provide scientists with information useful in determining the structures of native proteins.
 
-PIF is a library for Java, allowing for the identification of selected interatomic interactions (hydrogen and disulfide bonds, ionic, hydrophobic, aromatic-aromatic, sulphur-aromatic and amino-aromatic interactions) in the three-dimensional protein structure, obtained from a PDB file.
+PIF is a library for Java, allowing for the identification of selected interatomic interactions (hydrogen and disulfide bonds, ionic, hydrophobic, aromatic-aromatic, sulphur-aromatic and amino-aromatic interactions) in the three-dimensional protein structure, obtained from a PDB.
 
 The interaction identification rules applied in the PIF library are based on well-documented theoretical fundamentals, gathered from experimental studies of interactions in native protein structures.
 An illustrative analysis of the time required for the identification of interatomic interactions shows that the implemented algorithms feature linear scalability.
